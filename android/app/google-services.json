@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "913941209143",
+    "project_id": "contactart-6da07",
+    "storage_bucket": "contactart-6da07.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913941209143:android:e1057d560c8ab3cc3a9fb2",
+        "android_client_info": {
+          "package_name": "com.example.contact_art"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd7hj2C6wBhPN7ZVUR7BoxvJp689VG65M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
