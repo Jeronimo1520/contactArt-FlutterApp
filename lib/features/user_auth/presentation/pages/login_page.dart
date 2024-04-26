@@ -1,5 +1,7 @@
+import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/features/user_auth/presentation/pages/signUp_page.dart';
 import 'package:contact_art/features/user_auth/presentation/widgets/form_container_login_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -14,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  final FireBaseAuthService _auth = FireBaseAuthService();
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -50,9 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     )),
                 onPressed: () {
-                  if (_emailController.text.isNotEmpty ||
+                  if (_emailController.text.isNotEmpty &&
                       _passwordController.text.isNotEmpty) {
-                    print('Login exitoso');
+                    _signUp();
                   } else {
                     print('Por favor, diligencia todos los campos');
                   }
@@ -84,5 +88,21 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _signUp() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print("Usuario registrado con éxito");
+      Navigator.pushNamed(context, '/home');
+    } else {
+      print("Error al ingresar");
+      print(email);
+      print(password);
+    }
   }
 }
