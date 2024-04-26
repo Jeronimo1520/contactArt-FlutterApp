@@ -1,3 +1,5 @@
+import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -6,15 +8,32 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController idController = TextEditingController();
+
+  final FireBaseAuthService _auth = FireBaseAuthService();
+
   String? userType = 'comprador';
   bool termsAccepted = false;
+  bool obscureText = true;
+
+  void togglePasswordVisibility() {
+    setState(() {
+      obscureText = !obscureText;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -26,6 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       labelText: 'Correo',
                       border: OutlineInputBorder(
@@ -38,6 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: TextField(
+                    controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Nombre',
                       border: OutlineInputBorder(
@@ -54,6 +75,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: lastNameController,
                     decoration: InputDecoration(
                       labelText: 'Apellido',
                       border: OutlineInputBorder(
@@ -66,6 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: TextField(
+                    controller: phoneController,
                     decoration: InputDecoration(
                       labelText: 'Teléfono',
                       border: OutlineInputBorder(
@@ -79,6 +102,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             const SizedBox(height: 16),
             TextField(
+              controller: idController,
               decoration: InputDecoration(
                 labelText: 'Cédula/NIT',
                 border: OutlineInputBorder(
@@ -86,6 +110,49 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               style: const TextStyle(fontFamily: 'Poppins'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: passwordController,
+              obscureText: obscureText,
+              decoration: InputDecoration(
+                labelText: 'Contraseña',
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.visibility,
+                  ),
+                  onPressed: () => togglePasswordVisibility(),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              style: const TextStyle(fontFamily: 'Poppins'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              obscureText: obscureText,
+              controller: confirmPasswordController,
+              decoration: InputDecoration(
+                labelText: 'Confirmar contraseña',
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.visibility,
+                  ),
+                  onPressed: () => togglePasswordVisibility(),
+                ),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, confirma tu contraseña';
+                } else if (value != passwordController.text) {
+                  return 'Las contraseñas no coinciden';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 16),
             const Text('Tipo de usuario'),
@@ -165,9 +232,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     child: const Text(
                       'Regístrate',
-                      style: TextStyle(fontFamily: 'Poppins',color: Colors.white),
+                      style:
+                          TextStyle(fontFamily: 'Poppins', color: Colors.white),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _signUp();
+                    },
                   ),
                 ),
               ],
@@ -176,5 +246,21 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void _signUp() async {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? user = await _auth.signUpWithEmailAndPasswod(email, password);
+
+    if (user != null) {
+      print("Usuario registrado con éxito");
+      Navigator.pushNamed(context, '/home');
+    } else{
+      print("Error al registrar usuario");
+      print(email);
+      print(password);
+    }
   }
 }
