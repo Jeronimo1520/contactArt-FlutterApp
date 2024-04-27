@@ -1,4 +1,5 @@
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:contact_art/global/common/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController idController = TextEditingController();
+  bool _isSigning = false;
 
   final FireBaseAuthService _auth = FireBaseAuthService();
 
@@ -230,13 +232,18 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text(
-                      'Regístrate',
-                      style:
-                          TextStyle(fontFamily: 'Poppins', color: Colors.white),
-                    ),
+                    child: _isSigning
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text(
+                            'Regístrate',
+                            style: TextStyle(
+                                fontFamily: 'Poppins', color: Colors.white),
+                          ),
                     onPressed: () {
                       _signUp();
+                      
                     },
                   ),
                 ),
@@ -249,18 +256,32 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _signUp() async {
+    setState(
+      () {
+        _isSigning = true;
+      },
+    );
+
     String email = emailController.text;
     String password = passwordController.text;
 
     User? user = await _auth.signUpWithEmailAndPasswod(email, password);
-
+    setState(
+      () {
+        _isSigning = false;
+      },
+    );
     if (user != null) {
-      print("Usuario registrado con éxito");
+      showToast(
+          message: 'Usuario creado con éxito',
+          backgroundColor: Colors.purple,
+          textColor: Colors.white);
       Navigator.pushNamed(context, '/home');
-    } else{
-      print("Error al registrar usuario");
-      print(email);
-      print(password);
+    } else {
+      showToast(
+          message: "Hubo un error inesperado",
+          backgroundColor: Colors.purple,
+          textColor: Colors.white);
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/features/user_auth/presentation/pages/signUp_page.dart';
 import 'package:contact_art/features/user_auth/presentation/widgets/form_container_login_widget.dart';
+import 'package:contact_art/global/common/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
+  bool _isSigning = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -48,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: const Text('Login',
+                child: _isSigning ? const CircularProgressIndicator(color: Colors.white,) : const Text('Login',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       color: Colors.white,
@@ -56,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   if (_emailController.text.isNotEmpty &&
                       _passwordController.text.isNotEmpty) {
-                    _signUp();
+                    _signIn();
                   } else {
                     print('Por favor, diligencia todos los campos');
                   }
@@ -90,19 +92,27 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _signUp() async {
+  void _signIn() async {
+    setState(
+      () {
+        _isSigning = true;
+      },
+    );
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
+    setState(() {
+      _isSigning = false;
+    });
+
     if (user != null) {
-      print("Usuario registrado con éxito");
+      showToast(message: 'Usuario creado con éxito', backgroundColor: Colors.purple, textColor: Colors.white);
       Navigator.pushNamed(context, '/home');
     } else {
-      print("Error al ingresar");
-      print(email);
-      print(password);
+      showToast(message: "Hubo un error inesperado", backgroundColor:  Colors.purple, textColor: Colors.white);
+
     }
   }
 }
