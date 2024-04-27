@@ -3,16 +3,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 void showToast({
   required String message,
-  required Color backgroundColor,
-  required Color textColor,
 }) {
   Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_SHORT,
     gravity: ToastGravity.BOTTOM,
     timeInSecForIosWeb: 1,
-    backgroundColor: backgroundColor,
-    textColor: textColor,
+    backgroundColor: Colors.purple,
+    textColor: Colors.white,
     fontSize: 16.0,
   );
 }

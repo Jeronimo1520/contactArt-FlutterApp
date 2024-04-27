@@ -1,6 +1,5 @@
 import 'package:contact_art/global/common/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class FireBaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,14 +12,10 @@ class FireBaseAuthService {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         showToast(
-            message: 'El correo ya está en uso',
-            backgroundColor: Colors.purple,
-            textColor: Colors.white);
+            message: 'El correo ya está en uso',);
       } else {
         showToast(
-            message: 'Correo o contraseña incorrectos: $e',
-            backgroundColor: Colors.purple,
-            textColor: Colors.white);
+            message: 'Correo o contraseña incorrectos:',);
       }
     }
 
@@ -36,19 +31,13 @@ class FireBaseAuthService {
     } on FirebaseAuthException catch (e) {
       if(e.code == 'user-not-found'){
         showToast(
-            message: 'Usuario no encontrado',
-            backgroundColor: Colors.purple,
-            textColor: Colors.white);
+            message: 'Usuario no encontrado',);
       } else if(e.code == 'wrong-password'){
         showToast(
-            message: 'Contraseña incorrecta',
-            backgroundColor: Colors.purple,
-            textColor: Colors.white);
+            message: 'Contraseña incorrecta',);
       } else {
         showToast(
-            message: 'Correo o contraseña incorrectos: $e.code',
-            backgroundColor: Colors.purple,
-            textColor: Colors.white);
+            message: 'Correo o contraseña incorrectos:',);
       }
     }
 
