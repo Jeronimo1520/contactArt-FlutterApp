@@ -46,25 +46,28 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: _obscureText,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+              Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
-                  ),
-                  child: _isSigning ? const CircularProgressIndicator(color: Colors.white,) : const Text('Login',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        color: Colors.white,
-                      )),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _signIn();
-                    } else {
-                      showToast(message: 'Por favor, diligencia todos los campos');
-                    }
-                  }),
+                    child: _isSigning ? const CircularProgressIndicator(color: Colors.white,) : const Text('Login',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                        )),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _signIn();
+                      } else {
+                        showToast(message: 'Por favor, diligencia todos los campos');
+                      }
+                    }),
+              ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     if (user != null) {
-      showToast(message: 'Usuario creado con éxito');
+      showToast(message: 'Ingreso exitoso');
       Navigator.pushNamed(context, '/home');
     } else {
       showToast(message: "Hubo un error inesperado");
