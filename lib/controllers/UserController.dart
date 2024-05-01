@@ -6,12 +6,14 @@ class UserController {
 
   final String collection = "users";
 
-  Future<void> createUser(User user) async {
+  Future<String> createUser(User user) async {
     try {
-      await db.collection(collection).add(user.toJson());
-      
+      DocumentReference docRef =
+          await db.collection(collection).add(user.toJson());
+      return docRef.id;
     } catch (e) {
       print(e);
+      return "";
     }
   }
 }

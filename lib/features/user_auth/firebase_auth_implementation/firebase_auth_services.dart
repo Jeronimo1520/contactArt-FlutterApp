@@ -15,7 +15,7 @@ class FireBaseAuthService {
             message: 'El correo ya está en uso',);
       } else {
         showToast(
-            message: 'Correo o contraseña incorrectos:',);
+            message: 'Correo o contraseña incorrectos',);
       }
     }
 
@@ -37,7 +37,7 @@ class FireBaseAuthService {
             message: 'Contraseña incorrecta',);
       } else {
         showToast(
-            message: 'Correo o contraseña incorrectos:',);
+            message: 'Correo o contraseña incorrectos',);
       }
     }
 

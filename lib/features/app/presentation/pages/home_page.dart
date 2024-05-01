@@ -2,7 +2,10 @@ import 'package:contact_art/features/app/presentation/widgets/bottom_nav_bar.dar
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+   final String userId;
+
+  const HomePage({Key? key, required this.userId}) : super(key: key);
+
 
   @override
   _HomePageState createState() => _HomePageState();

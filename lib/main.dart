@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignUpPage(),
-        '/home': (context) => HomePage(),
+        '/home': (context) => HomePage(userId: "",),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',
