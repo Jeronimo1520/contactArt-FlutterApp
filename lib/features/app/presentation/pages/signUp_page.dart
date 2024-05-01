@@ -50,7 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
+          child: ListView(
             children: <Widget>[
               Row(
                 children: <Widget>[

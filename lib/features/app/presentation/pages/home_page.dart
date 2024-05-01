@@ -1,6 +1,7 @@
 import 'package:contact_art/features/app/presentation/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -9,22 +10,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-
-  static const List<Widget> _pages = <Widget>[
-    // Aquí puedes incluir las páginas que desees para cada ítem del menú
-    Text('Inicio'),
-    Text('Buscar'),
-    Text('Favoritos'),
-    Text('Carrito'),
-    Text('Perfil'),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +18,11 @@ class _HomePageState extends State<HomePage> {
         title: Text('ContactArt'),
       ),
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+        child: Text("Este es el inicio"),
       ),
       bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
-        onItemSelected: _onItemTapped,
+        selectedIndex: 2,
+        context: context,
       ),
     );
   }
