@@ -16,11 +16,11 @@ class _HomePageState extends State<HomePage> {
 
   static const List<Widget> _pages = <Widget>[
     // Aquí puedes incluir las páginas que desees para cada ítem del menú
-    Text('Inicio'),
-    Text('Buscar'),
+    Text('Perfil'),
+    Text('Información'),
     Text('Favoritos'),
     Text('Carrito'),
-    Text('Perfil'),
+    Text('Carrito'),
   ];
 
   void _onItemTapped(int index) {
@@ -29,6 +29,10 @@ class _HomePageState extends State<HomePage> {
       if (_selectedIndex == 0) {
         Navigator.pushNamed(context,
             '/editProfile'); // Navega a la página EditProfilePage cuando se selecciona el ícono "person"
+      }
+      if (_selectedIndex == 1) {
+        Navigator.pushNamed(context,
+            '/addProduct'); // Navega a la página EditProfilePage cuando se selecciona el ícono "person"
       }
     });
   }

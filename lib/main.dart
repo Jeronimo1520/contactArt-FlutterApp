@@ -1,3 +1,4 @@
+import 'package:contact_art/features/app/presentation/pages/add_product.dart';
 import 'package:contact_art/features/app/presentation/pages/edit_profile.dart';
 import 'package:contact_art/features/app/presentation/pages/home_page.dart';
 import 'package:contact_art/firebase_options.dart';
@@ -27,6 +28,7 @@ class MainApp extends StatelessWidget {
         '/signup': (context) => SignUpPage(),
         '/home': (context) => HomePage(userId: "",),
         '/editProfile': (context) => EditProfilePage(),
+        '/addProduct': (context) => AddProductPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',
