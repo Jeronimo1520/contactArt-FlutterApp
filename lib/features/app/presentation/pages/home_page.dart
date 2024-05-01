@@ -26,6 +26,10 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        Navigator.pushNamed(context,
+            '/editProfile'); // Navega a la página EditProfilePage cuando se selecciona el ícono "person"
+      }
     });
   }
 
@@ -45,4 +49,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
