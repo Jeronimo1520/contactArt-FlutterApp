@@ -1,6 +1,8 @@
+import 'package:contact_art/controllers/UserController.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/global/common/signUpValidators.dart';
 import 'package:contact_art/global/common/toast.dart';
+import 'package:contact_art/models/User.dart' as AppUser;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,8 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isSigning = false;
 
   final FireBaseAuthService _auth = FireBaseAuthService();
+
+  final UserController _userController = UserController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -284,13 +288,25 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = emailController.text;
     String password = passwordController.text;
 
-    User? user = await _auth.signUpWithEmailAndPasswod(email, password);
+    User? userFirebase = await _auth.signUpWithEmailAndPassword(email, password);
     setState(
       () {
         _isSigning = false;
       },
     );
-    if (user != null) {
+    if (userFirebase != null) {
+      AppUser.User user = AppUser.User(
+        email: email,
+        idNIT: idController.text,
+        userName: email.split('@')[0],
+        name: nameController.text,
+        lastName: lastNameController.text,
+        phone: phoneController.text,
+        termsAccepted: termsAccepted,
+        type: userType!,
+      );
+      await _userController.createUser(user);
+      
       showToast(
         message: 'Usuario creado con éxito',
       );
