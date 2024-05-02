@@ -1,6 +1,7 @@
 import 'package:contact_art/features/app/presentation/pages/add_product.dart';
 import 'package:contact_art/features/app/presentation/pages/edit_profile.dart';
 import 'package:contact_art/features/app/presentation/pages/home_page.dart';
+import 'package:contact_art/features/app/presentation/pages/profile.dart';
 import 'package:contact_art/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class MainApp extends StatelessWidget {
         '/home': (context) => HomePage(userId: "",),
         '/editProfile': (context) => EditProfilePage(),
         '/addProduct': (context) => AddProductPage(),
+        '/perfil': (context) => ProfilePage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',
