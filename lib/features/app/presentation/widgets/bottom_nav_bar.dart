@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
-  final Function(int) onItemSelected;
+  final BuildContext context;
 
-  const BottomNavBar({
-    Key? key,
-    required this.selectedIndex,
-    required this.onItemSelected,
-  }) : super(key: key);
+  static const List<String> _pages = <String>[
+    '/perfil',
+    '/informacion',
+    '/home',
+    '/mensajes',
+    '/carrito',
+  ];
+
+  BottomNavBar({required this.selectedIndex, required this.context});
+
+  void _onItemTapped(int index) {
+    Navigator.pushNamed(context, _pages[index]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +46,7 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: selectedIndex,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Color.fromRGBO(75, 7, 87, 1),
-      onTap: onItemSelected,
+      onTap: _onItemTapped,
     );
   }
 }

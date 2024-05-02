@@ -1,6 +1,7 @@
 import 'package:contact_art/features/app/presentation/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
+
 class HomePage extends StatefulWidget {
    final String userId;
 
@@ -44,11 +45,11 @@ class _HomePageState extends State<HomePage> {
         title: Text('ContactArt'),
       ),
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+        child: Text("Este es el inicio"),
       ),
       bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
-        onItemSelected: _onItemTapped,
+        selectedIndex: 2,
+        context: context,
       ),
     );
   }
