@@ -1,3 +1,4 @@
+import 'package:contact_art/features/app/presentation/pages/home_page.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/features/app/presentation/pages/signUp_page.dart';
 import 'package:contact_art/features/app/presentation/widgets/form_container_login_widget.dart';
@@ -30,12 +31,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Form(
         key: _formKey,
         child: Center(
           child: ListView(
-          
             children: <Widget>[
               Image.asset('assets/images/logoNoBackground.png'),
               const SizedBox(height: 30),
@@ -55,16 +54,21 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: _isSigning ? const CircularProgressIndicator(color: Colors.white,) : const Text('Login',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                        )),
+                    child: _isSigning
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text('Login',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                            )),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _signIn();
                       } else {
-                        showToast(message: 'Por favor, diligencia todos los campos');
+                        showToast(
+                            message: 'Por favor, diligencia todos los campos');
                       }
                     }),
               ),
@@ -115,10 +119,17 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: 'Ingreso exitoso');
-      Navigator.pushNamed(context, '/home');
-    } else {
-      showToast(message: "Hubo un error inesperado");
 
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              HomePage(userId: user.uid), // Esto Pasa el ID del usuario a HomePage
+        ),
+      );
+    } else {
+      return null;
     }
   }
 }

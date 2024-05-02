@@ -1,4 +1,5 @@
 import 'package:contact_art/controllers/UserController.dart';
+import 'package:contact_art/features/app/presentation/pages/home_page.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/global/common/signUpValidators.dart';
 import 'package:contact_art/global/common/toast.dart';
@@ -260,7 +261,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         if (_formKey.currentState!.validate() &&
                             termsAccepted) {
                           _signUp();
-                          
                         } else {
                           showToast(
                             message: 'Por favor, diligencia todos los campos',
@@ -288,7 +288,8 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = emailController.text;
     String password = passwordController.text;
 
-    User? userFirebase = await _auth.signUpWithEmailAndPassword(email, password);
+    User? userFirebase =
+        await _auth.signUpWithEmailAndPassword(email, password);
     setState(
       () {
         _isSigning = false;
@@ -305,12 +306,27 @@ class _SignUpPageState extends State<SignUpPage> {
         termsAccepted: termsAccepted,
         type: userType!,
       );
-      await _userController.createUser(user);
-      
-      showToast(
-        message: 'Usuario creado con éxito',
-      );
-      Navigator.pushNamed(context, '/home');
+
+      String userId = await _userController.createUser(user);
+
+      if (userId.isNotEmpty) {
+        showToast(
+          message: 'Usuario creado con éxito',
+        );
+
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                HomePage(userId: userId), // Pasa el ID del usuario a HomePage
+          ),
+        );
+      } else {
+        showToast(
+          message: 'Hubo un error al crear el usuario',
+        );
+      }
     } else {
       showToast(
         message: "Hubo un error inesperado",
