@@ -1,9 +1,16 @@
 import 'dart:io';
-
+import 'package:contact_art/controllers/getImage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
-class AddProductPage extends StatelessWidget {
+class AddProductPage extends StatefulWidget {
+  const AddProductPage({super.key});
+
+  @override
+  State<AddProductPage> createState() => _AddProductPageState();
+}
+
+class _AddProductPageState extends State<AddProductPage> {
+  File? image_to_upload;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +51,10 @@ class AddProductPage extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      final imagePicker = ImagePicker();
-                      final XFile? image = await imagePicker.pickImage(
-                          source: ImageSource.gallery);
-                      if (image != null) {
-                      }
+                      final image = await getImage();
+                      setState(() {
+                        image_to_upload = File(image!.path);
+                      });
                     },
                     child: Text('Seleccionar imagen'),
                   ),
@@ -61,8 +67,7 @@ class AddProductPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
-                    },
+                    onPressed: () {},
                     child: Text('Publicar producto'),
                   ),
                 ),
