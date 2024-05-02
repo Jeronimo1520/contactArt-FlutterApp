@@ -261,7 +261,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         if (_formKey.currentState!.validate() &&
                             termsAccepted) {
                           _signUp();
-                        } else {
+                        } else if (!termsAccepted){
+                          showToast(
+                            message: 'Por favor, acepta los términos y condiciones',
+                          );
+                        }else{
                           showToast(
                             message: 'Por favor, diligencia todos los campos',
                           );

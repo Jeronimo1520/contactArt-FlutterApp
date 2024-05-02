@@ -35,9 +35,10 @@ class FireBaseAuthService {
       } else if(e.code == 'wrong-password'){
         showToast(
             message: 'Contraseña incorrecta',);
-      } else {
+      } else if (e.code == 'invalid-credential'){
+        print(e.code);
         showToast(
-            message: 'Correo o contraseña incorrectos',);
+            message: 'Credenciales invalidas o no encontradas',);
       }
     }
 

@@ -43,10 +43,3 @@ String? validateId(String? value) {
   } 
   return null;
 }
-
-String? validateTerms(bool value) {
-  if (!value) {
-    return 'Por favor, acepta los términos y condiciones';
-  } 
-  return null;
-}
