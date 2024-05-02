@@ -1,3 +1,4 @@
+import 'package:contact_art/features/app/presentation/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -35,11 +36,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      // Acción al presionar el botón de editar perfil
+                      Navigator.pushNamed(context, '/editProfile');
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.settings),
+                    icon: Icon(Icons.camera_alt),
                     onPressed: () {
                       // Acción al presionar el botón de configuración
                     },
@@ -86,7 +87,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
+        bottomNavigationBar: BottomNavBar(
+          selectedIndex: 0,
+          context: context,
+        ),
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
