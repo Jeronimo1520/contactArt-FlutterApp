@@ -1,4 +1,4 @@
-import 'package:contact_art/features/app/presentation/widgets/bottom_nav_bar.dart';
+import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {

@@ -1,14 +1,14 @@
-import 'package:contact_art/features/app/presentation/pages/add_product.dart';
-import 'package:contact_art/features/app/presentation/pages/edit_profile.dart';
-import 'package:contact_art/features/app/presentation/pages/home_page.dart';
+import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
+import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
+import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/app/presentation/pages/profile.dart';
 import 'package:contact_art/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:contact_art/features/app/presentation/splash_screen/splash_screen.dart';
-import 'package:contact_art/features/app/presentation/pages/login_page.dart';
+import 'package:contact_art/features/app/presentation/splash_screen/splashScreen.dart';
+import 'package:contact_art/features/app/presentation/pages/loginPage.dart';
 
-import 'features/app/presentation/pages/signUp_page.dart';
+import 'features/app/presentation/pages/signUpPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
