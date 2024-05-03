@@ -144,6 +144,7 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       bottomNavigationBar: BottomNavBar(
+        userId: widget.userId,
         selectedIndex: 2,
         context: context,
       ),
