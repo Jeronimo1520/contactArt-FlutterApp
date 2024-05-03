@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
         child: Text("Este es el inicio"),
       ),
       bottomNavigationBar: BottomNavBar(
+        userId: widget.userId,
         selectedIndex: 2,
         context: context,
       ),
