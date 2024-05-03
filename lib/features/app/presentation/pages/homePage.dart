@@ -1,4 +1,4 @@
-import 'package:contact_art/controllers/ProductController.dart';
+import 'package:contact_art/controllers/productController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                               height: 420, 
                               width: 400, 
                               child: Image.network(
-                                product['img1'],
+                                product['img'],
                                 fit:BoxFit.cover,
                                 ),
                             ),

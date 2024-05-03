@@ -1,4 +1,4 @@
-import 'package:contact_art/controllers/UserController.dart';
+import 'package:contact_art/controllers/userController.dart';
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
 import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';

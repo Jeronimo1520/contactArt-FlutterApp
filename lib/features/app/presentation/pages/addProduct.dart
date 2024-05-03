@@ -1,6 +1,9 @@
 import 'dart:io';
-import 'package:contact_art/controllers/getImage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:contact_art/controllers/productController.dart';
+import 'package:contact_art/controllers/uploadImage.dart';
 import 'package:flutter/material.dart';
+import 'package:contact_art/models/Product.dart' as AppProduct;
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -10,7 +13,16 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  File? image_to_upload;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  final _firestore = FirebaseFirestore.instance;
+  String? categoryType = 'Categoría 1';
+
+  File? imageToUpload;
+
+  final ProductController _productController = ProductController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +35,17 @@ class _AddProductPageState extends State<AddProductPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
+              controller: nameController,
               decoration: InputDecoration(labelText: 'Nombre del producto'),
             ),
             SizedBox(height: 16),
             TextFormField(
+              controller: priceController,
               decoration: InputDecoration(labelText: 'Precio del producto'),
             ),
             SizedBox(height: 16),
             TextFormField(
+              controller: descriptionController,
               decoration: InputDecoration(labelText: 'Descripción'),
             ),
             SizedBox(height: 16),
@@ -53,8 +68,11 @@ class _AddProductPageState extends State<AddProductPage> {
                     onPressed: () async {
                       final image = await getImage();
                       setState(() {
-                        image_to_upload = File(image!.path);
+                        imageToUpload = File(image!.path);
                       });
+                      if (imageToUpload == null) {
+                        return;
+                      }
                     },
                     child: Text('Seleccionar imagen'),
                   ),
@@ -67,7 +85,9 @@ class _AddProductPageState extends State<AddProductPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      _publishProduct();
+                    },
                     child: Text('Publicar producto'),
                   ),
                 ),
@@ -77,5 +97,36 @@ class _AddProductPageState extends State<AddProductPage> {
         ),
       ),
     );
+  }
+
+  void _publishProduct() async {
+
+    final uploaded = await uploadImage(imageToUpload!);
+
+    AppProduct.Product product = AppProduct.Product(
+      price: priceController.text,
+      name: nameController.text,
+      img: uploaded.toString(),
+      description: descriptionController.text,
+      category: 'Categoría 1',
+    );
+
+    final result = await _productController.createProduct(product);
+
+    if (result.isNotEmpty) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Producto publicado correctamente'),
+        ),
+      );
+    } else {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error al publicar el producto'),
+        ),
+      );
+    }
   }
 }
