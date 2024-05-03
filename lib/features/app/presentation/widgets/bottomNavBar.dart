@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final BuildContext context;
+  final String? userId;
 
   static const List<String> _pages = <String>[
     '/perfil',
@@ -12,10 +13,10 @@ class BottomNavBar extends StatelessWidget {
     '/carrito',
   ];
 
-  BottomNavBar({required this.selectedIndex, required this.context});
+  BottomNavBar({required this.selectedIndex, required this.context, this.userId});
 
   void _onItemTapped(int index) {
-    Navigator.pushNamed(context, _pages[index]);
+    Navigator.pushNamed(context, _pages[index], arguments: {'userId': userId});
   }
 
   @override
@@ -45,7 +46,7 @@ class BottomNavBar extends StatelessWidget {
       ],
       currentIndex: selectedIndex,
       selectedItemColor: Colors.blue,
-      unselectedItemColor: Color.fromRGBO(75, 7, 87, 1),
+      unselectedItemColor: const Color.fromRGBO(75, 7, 87, 1),
       onTap: _onItemTapped,
     );
   }

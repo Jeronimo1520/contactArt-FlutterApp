@@ -29,6 +29,24 @@ class User{
     this.instagramLink,
   });
 
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      email: json['email'],
+      idNIT: json['idNIT'],
+      userName: json['userName'],
+      name: json['name'],
+      lastName: json['lastName'],
+      phone: json['phone'],
+      termsAccepted: json['termsAccepted'],
+      type: json['type'],
+      photoUrl: json['photoUrl'],
+      description: json['description'],
+      facebookLink: json['facebookLink'],
+      instagramLink: json['instagramLink'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'email': email,

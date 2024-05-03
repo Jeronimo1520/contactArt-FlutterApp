@@ -16,4 +16,19 @@ class UserController {
       return "";
     }
   }
+
+  Future<User> getUser(String userId) async {
+  try {
+    DocumentSnapshot docSnapshot = await db.collection(collection).doc(userId).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      return User.fromJson(data);
+    } else {
+      throw Exception('Usuario no encontrado');
+    }
+  } catch (e) {
+    print(e);
+    throw e;
+  }
+}
 }
