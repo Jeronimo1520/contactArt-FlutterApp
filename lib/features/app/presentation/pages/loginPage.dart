@@ -1,7 +1,7 @@
-import 'package:contact_art/features/app/presentation/pages/home_page.dart';
+import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:contact_art/features/app/presentation/pages/signUp_page.dart';
-import 'package:contact_art/features/app/presentation/widgets/form_container_login_widget.dart';
+import 'package:contact_art/features/app/presentation/pages/signUpPage.dart';
+import 'package:contact_art/features/app/presentation/widgets/formContainerLoginWidget.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

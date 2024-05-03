@@ -1,3 +1,6 @@
+import 'package:contact_art/controllers/UserController.dart';
+import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
+import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -6,58 +9,79 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  User? user;
+  UserController userController = UserController();
+  String? userId;
+
+ 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    userId = args['userId'];
+    _loadUserData(userId!);
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Perfil',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Perfil de Usuario'),
+          title: const Text('Perfil de Usuario'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage(''),
+                backgroundImage:
+                    AssetImage('assets/images/logoWhiteBackground.png'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
-                'Nombre de Usuario',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                user != null ? user!.userName : 'Cargando...',
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.edit),
+                    icon: const Icon(Icons.edit),
                     onPressed: () {
-                      // Acción al presionar el botón de editar perfil
+                      Navigator.pushNamed(context, '/editProfile');
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.settings),
+                    icon: const Icon(Icons.camera_alt),
                     onPressed: () {
                       // Acción al presionar el botón de configuración
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.favorite),
+                    icon: const Icon(Icons.favorite),
                     onPressed: () {
                       // Acción al presionar el botón de favoritos
                     },
                   ),
                 ],
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Text(
-                'Lorem ipsum dolor sit amet leo venenatis consequat mattis nec mon',
+                '${user != null ? user!.description : 'Cargando...'}',
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -65,28 +89,38 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 100,
                     height: 100,
                     color: Colors.grey,
-                    child: Icon(Icons.add),
+                    child: const Icon(Icons.add),
                   ),
                   Container(
                     width: 100,
                     height: 100,
                     color: Colors.grey,
-                    child: Icon(Icons.add),
+                    child: const Icon(Icons.add),
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/addProduct');
                   // Acción al presionar el botón "Añadir producto"
                 },
-                child: Text('Añadir producto'),
+                child: const Text('Añadir producto'),
               ),
             ],
           ),
         ),
+        bottomNavigationBar: BottomNavBar(
+          selectedIndex: 0,
+          context: context,
+        ),
       ),
+      debugShowCheckedModeBanner: false,
     );
+  }
+
+  void _loadUserData(String userId) async {
+    user = await userController.getUser(userId);
+    setState(() {});
   }
 }

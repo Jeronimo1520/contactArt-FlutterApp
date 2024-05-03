@@ -1,5 +1,5 @@
 import 'package:contact_art/controllers/ProductController.dart';
-import 'package:contact_art/features/app/presentation/widgets/bottom_nav_bar.dart';
+import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -175,3 +175,4 @@ class DetailPage extends StatelessWidget {
     );
   }
 }
+
