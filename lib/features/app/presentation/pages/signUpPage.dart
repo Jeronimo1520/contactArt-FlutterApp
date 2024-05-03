@@ -301,6 +301,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
     if (userFirebase != null) {
       AppUser.User user = AppUser.User(
+        id: userFirebase.uid,
         email: email,
         idNIT: idController.text,
         userName: email.split('@')[0],
@@ -308,6 +309,7 @@ class _SignUpPageState extends State<SignUpPage> {
         lastName: lastNameController.text,
         phone: phoneController.text,
         termsAccepted: termsAccepted,
+        description: '',
         type: userType!,
       );
 

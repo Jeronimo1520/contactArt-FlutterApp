@@ -20,12 +20,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('ContactArt'),
+        title: const Text('ContactArt'),
       ),
-      body: Center(
+      body: const Center(
         child: Text("Este es el inicio"),
       ),
       bottomNavigationBar: BottomNavBar(
+        userId: widget.userId,
         selectedIndex: 2,
         context: context,
       ),
