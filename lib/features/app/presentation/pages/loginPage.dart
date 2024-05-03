@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/features/app/presentation/pages/signUpPage.dart';
@@ -119,13 +120,18 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: 'Ingreso exitoso');
+      final CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      DocumentSnapshot userDoc = await users.doc(user.uid).get();
+      String firestoreUserId = userDoc.id;
+      print(firestoreUserId);
 
       // ignore: use_build_context_synchronously
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              HomePage(userId: user.uid), // Esto Pasa el ID del usuario a HomePage
+          builder: (context) => HomePage(
+              userId: firestoreUserId), // Esto Pasa el ID del usuario a HomePage
         ),
       );
     } else {
