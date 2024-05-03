@@ -313,9 +313,9 @@ class _SignUpPageState extends State<SignUpPage> {
         type: userType!,
       );
 
-      String userId = await _userController.createUser(user);
+      String userId = await _userController.createUser(user) ?? '';
 
-      if (userId.isNotEmpty) {
+      if (userId.isNotEmpty && userId != '') {
         showToast(
           message: 'Usuario creado con éxito',
         );
