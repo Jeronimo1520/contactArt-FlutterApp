@@ -11,7 +11,7 @@ Future<XFile?> getImage() async {
 
 final FirebaseStorage storage = FirebaseStorage.instance;
 
-Future<bool> uploadImage(File image) async {
+Future<Object> uploadImage(File image) async {
   try {
     final String namefile = image.path.split('/').last;
     final Reference ref = storage.ref().child('products').child(namefile);
@@ -19,15 +19,14 @@ Future<bool> uploadImage(File image) async {
 
     final TaskSnapshot snapshot = await uploadTask.whenComplete(() => true);
     final String url = await snapshot.ref.getDownloadURL();
-    print(url);
 
     if (snapshot.state == TaskState.success) {
-      return true;
+      return url;
     } else {
-      return false;
+      return Null;
     }
   } catch (e) {
     print(e);
-    return false;
+    return Null;
   }
 }

@@ -32,6 +32,7 @@ class UserController {
     }
   }
 
+
   Future<void> updateUserData(userId, userName, instagramLink, facebookLink, description) async {
     await FirebaseFirestore.instance
         .collection('users')
@@ -43,4 +44,6 @@ class UserController {
       'description': description,
     });
   }
+
+
 }
