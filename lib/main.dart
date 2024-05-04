@@ -25,16 +25,16 @@ class MainApp extends StatelessWidget {
     return  MaterialApp(
 
       routes: {
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
         '/signup': (context) => SignUpPage(),
-        '/home': (context) => HomePage(userId: "",),
-        '/editProfile': (context) => EditProfilePage(),
-        '/addProduct': (context) => AddProductPage(),
+        '/home': (context) => const HomePage(),
+        '/editProfile': (context) => const EditProfilePage(),
+        '/addProduct': (context) => const AddProductPage(),
         '/perfil': (context) => ProfilePage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',
-      home: SplashScreen(
+      home: const SplashScreen(
         child: LoginPage(),
       ),
     );

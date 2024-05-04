@@ -8,7 +8,7 @@ class UserController {
 
   Future<String?> createUser(User user) async {
     try {
-          await db.collection(collection).doc(user.id).set(user.toJson());
+      await db.collection(collection).doc(user.id).set(user.toJson());
       return user.id;
     } catch (e) {
       print(e);
@@ -31,4 +31,19 @@ class UserController {
       throw e;
     }
   }
+
+
+  Future<void> updateUserData(userId, userName, instagramLink, facebookLink, description) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({
+      'userName': userName,
+      'instagramLink': instagramLink,
+      'facebookLink': facebookLink,
+      'description': description,
+    });
+  }
+
+
 }

@@ -1,6 +1,13 @@
+import 'package:contact_art/controllers/UserController.dart';
+import 'package:contact_art/global/common/toast.dart';
+import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
 
 class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({Key? key, this.user, this.userId}) : super(key: key);
+
+ final User? user;
+ final String? userId;
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
@@ -11,8 +18,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
  final TextEditingController _facebookController = TextEditingController();
  final TextEditingController _descriptionController = TextEditingController();
 
+ final UserController userController = UserController();
+
   // Placeholder image URL (you can replace this with actual image data)
   final String _selectedImage = 'https://via.placeholder.com/150';
+
+   @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
 
 
   void _selectImage() {
@@ -20,6 +35,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
     // Implement image picker logic here
     // For example, use image_picker package to select an image from the device
     // Update _selectedImage with the selected image URL
+  }
+
+  void _loadUserData() {
+    _usernameController.text = widget.user?.userName ?? '';
+    _instagramController.text = widget.user?.instagramLink! ?? '';
+    _facebookController.text = widget.user?.facebookLink! ?? '';
+    _descriptionController.text = widget.user?.description! ?? '';
   }
 
   @override
@@ -32,7 +54,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // Editable fields
             GestureDetector(
               onTap: _selectImage,
               child: Column(
@@ -65,16 +86,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () {
-                // Implement logic to save profile data
-                // You can access the entered values using _usernameController.text, etc.
-              },
+              onPressed: _UpdateUser,
               child: const Text('Guardar Cambios'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _UpdateUser() async{
+    try {
+      print(widget.user!.id);
+      await userController.updateUserData(
+        widget.userId,
+        _usernameController.text,
+        _instagramController.text,
+        _facebookController.text,
+        _descriptionController.text,
+      );
+      showToast(message: 'Perfil actualizado correctamente');
+    } catch (e) {
+      print(e);
+      showToast(message: 'Error al actualizar el perfil');
+    }
+
+    setState(() {
+      Navigator.pop(context);
+    });
   }
 }
 

@@ -6,9 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class HomePage extends StatefulWidget {
-   final String userId;
+   final String? userId;
 
-  const HomePage({Key? key, required this.userId}) : super(key: key);
+  const HomePage({Key? key, this.userId}) : super(key: key);
 
 
   @override
