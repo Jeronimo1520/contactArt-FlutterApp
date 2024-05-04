@@ -8,7 +8,7 @@ class UserController {
 
   Future<String?> createUser(User user) async {
     try {
-          await db.collection(collection).doc(user.id).set(user.toJson());
+      await db.collection(collection).doc(user.id).set(user.toJson());
       return user.id;
     } catch (e) {
       print(e);
@@ -17,17 +17,30 @@ class UserController {
   }
 
   Future<User> getUser(String userId) async {
-  try {
-    DocumentSnapshot docSnapshot = await db.collection(collection).doc(userId).get();
-    if (docSnapshot.exists) {
-      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
-      return User.fromJson(data);
-    } else {
-      throw Exception('Usuario no encontrado');
+    try {
+      DocumentSnapshot docSnapshot =
+          await db.collection(collection).doc(userId).get();
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+        return User.fromJson(data);
+      } else {
+        throw Exception('Usuario no encontrado');
+      }
+    } catch (e) {
+      print(e);
+      throw e;
     }
-  } catch (e) {
-    print(e);
-    throw e;
   }
-}
+
+  Future<void> updateUserData(userId, userName, instagramLink, facebookLink, description) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({
+      'userName': userName,
+      'instagramLink': instagramLink,
+      'facebookLink': facebookLink,
+      'description': description,
+    });
+  }
 }

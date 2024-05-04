@@ -311,6 +311,9 @@ class _SignUpPageState extends State<SignUpPage> {
         termsAccepted: termsAccepted,
         description: '',
         type: userType!,
+        facebookLink: '',
+        instagramLink: '',
+
       );
 
       String userId = await _userController.createUser(user) ?? '';

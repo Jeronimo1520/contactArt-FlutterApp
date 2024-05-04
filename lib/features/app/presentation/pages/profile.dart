@@ -1,4 +1,5 @@
 import 'package:contact_art/controllers/UserController.dart';
+import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
 import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
@@ -13,23 +14,23 @@ class _ProfilePageState extends State<ProfilePage> {
   UserController userController = UserController();
   String? userId;
 
- 
   @override
   void initState() {
     super.initState();
   }
 
   @override
+  //Metodo para traer el userId como parametro que fue pasado
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     userId = args['userId'];
     _loadUserData(userId!);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Perfil',
       home: Scaffold(
@@ -59,7 +60,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/editProfile');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfilePage(user: user!, userId: userId),
+                        ),
+                      );
                     },
                   ),
                   IconButton(
@@ -121,6 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _loadUserData(String userId) async {
     user = await userController.getUser(userId);
+    print(user?.id);
     setState(() {});
   }
 }
