@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
-import 'package:contact_art/features/app/presentation/widgets/googleSignInWidget.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/features/app/presentation/pages/signUpPage.dart';
 import 'package:contact_art/features/app/presentation/widgets/formContainerLoginWidget.dart';
@@ -8,8 +7,6 @@ import 'package:contact_art/global/common/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -48,66 +45,33 @@ class _LoginPageState extends State<LoginPage> {
                 togglePasswordVisibility: _togglePasswordVisibility,
                 obscureText: _obscureText,
               ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: _isSigning
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : const Text('Login',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                              )),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _signIn();
-                        } else {
-                          showToast(
-                              message: 'Por favor, diligencia todos los campos');
-                        }
-                      }),
-                ),
-              ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 20),
               Align(
                 alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon( // Icono de Google
-                            FontAwesomeIcons.google,
-                            color: Colors.white,),
-                          Text(' Entrar con Google',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  )),
-                        ],
-                      ),
-                      onPressed: () {
-                          _signInWithGoogle();
-                      }),
-                ),
+                    ),
+                    child: _isSigning
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text('Login',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                            )),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _signIn();
+                      } else {
+                        showToast(
+                            message: 'Por favor, diligencia todos los campos');
+                      }
+                    }),
               ),
               const SizedBox(height: 20),
               Row(
@@ -173,30 +137,5 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       return null;
     }
-  }
-  
-  void _signInWithGoogle() async {
-      final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-      try {
-          final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-
-          if(googleSignInAccount != null){
-            final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
-
-            final AuthCredential credential = GoogleAuthProvider.credential(
-              accessToken: googleSignInAuthentication.accessToken,
-              idToken: googleSignInAuthentication.idToken,
-            );
-
-            await FirebaseAuth.instance.signInWithCredential(credential);
-            Navigator.pushNamed(context, '/home');
-          }
-
-        
-      } catch (e) {
-        showToast(message: 'Error al iniciar sesión con Google, inténtelo más tarde');
-        print("Error auth google: $e");
-      }
   }
 }

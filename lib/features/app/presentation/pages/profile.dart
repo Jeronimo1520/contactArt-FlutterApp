@@ -128,7 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _loadUserData(String userId) async {
     user = await userController.getUser(userId);
-    print(userId);
+    print(user?.id);
     setState(() {});
   }
 }
