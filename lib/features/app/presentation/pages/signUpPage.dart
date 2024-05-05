@@ -58,6 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       validator: validateEmail,
                       decoration: InputDecoration(
                         labelText: 'Correo',
@@ -72,6 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: nameController,
+                      keyboardType: TextInputType.name,
                       validator: validateName,
                       decoration: InputDecoration(
                         labelText: 'Nombre',
@@ -90,6 +92,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: lastNameController,
+                      keyboardType: TextInputType.name,
                       validator: validateLastName,
                       decoration: InputDecoration(
                         labelText: 'Apellido',
@@ -104,6 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: phoneController,
+                      keyboardType: TextInputType.phone,
                       validator: validatePhone,
                       decoration: InputDecoration(
                         labelText: 'Teléfono',
@@ -119,6 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: idController,
+                keyboardType: TextInputType.number,
                 validator: validateId,
                 decoration: InputDecoration(
                   labelText: 'Cédula/NIT',
@@ -131,6 +136,7 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: passwordController,
+                keyboardType: TextInputType.visiblePassword,
                 validator: validatePassword,
                 obscureText: obscureText,
                 decoration: InputDecoration(
