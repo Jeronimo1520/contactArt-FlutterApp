@@ -97,7 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _UpdateUser() async{
     try {
-      print(widget.user!.id);
+      print("User id: ${widget.userId}");
       await userController.updateUserData(
         widget.userId,
         _usernameController.text,

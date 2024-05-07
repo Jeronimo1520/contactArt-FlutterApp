@@ -7,6 +7,7 @@ import 'package:contact_art/global/common/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -46,33 +47,74 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: _obscureText,
               ),
               const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
-                    ),
-                    child: _isSigning
-                        ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
-                        : const Text('Login',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
+                      child: _isSigning
+                          ? const CircularProgressIndicator(
                               color: Colors.white,
-                            )),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _signIn();
-                      } else {
-                        showToast(
-                            message: 'Por favor, diligencia todos los campos');
-                      }
-                    }),
+                            )
+                          : const Text('Ingresar',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                              )),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _signIn();
+                        } else {
+                          showToast(
+                              message:
+                                  'Por favor, diligencia todos los campos');
+                        }
+                      }),
+                ),
               ),
+              const SizedBox(height: 5),
+              Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                // Icono de Google
+                                FontAwesomeIcons.google,
+                                color: Colors.white,
+                              ),
+                              Text(' Entrar con Google',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  )),
+                            ],
+                          ),
+                          onPressed: () async {
+                            User? user =
+                                await FireBaseAuthService.signInWithGoogle(); // Inicia sesión con Google
+                            if (user != null) {
+                              print('Usuario logueado con Google ${user.uid}');
+                              Navigator.pushNamed(context, '/home');
+                            }else{
+                              showToast(message: 'Error al iniciar sesión con Google');
+                            }
+                          }))),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -131,7 +173,8 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(
-              userId: firestoreUserId), // Esto Pasa el ID del usuario a HomePage
+              userId:
+                  firestoreUserId), // Esto Pasa el ID del usuario a HomePage
         ),
       );
     } else {

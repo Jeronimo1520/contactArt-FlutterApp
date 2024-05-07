@@ -21,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
-  //Metodo para traer el userId como parametro que fue pasado
+  //Metodo para traer el userId como parametro que fue pasado desde el bottomNavBar
   void didChangeDependencies() {
     super.didChangeDependencies();
     final Map<String, dynamic> args =
@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EditProfilePage(user: user!, userId: userId),
+                          builder: (context) => EditProfilePage(user: user, userId: userId),
                         ),
                       );
                     },
@@ -128,7 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _loadUserData(String userId) async {
     user = await userController.getUser(userId);
-    print(user?.id);
+    print(user!.userName);
     setState(() {});
   }
 }
