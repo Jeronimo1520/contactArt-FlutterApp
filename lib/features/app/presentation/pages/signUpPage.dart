@@ -1,3 +1,4 @@
+import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/controllers/userController.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
@@ -6,6 +7,7 @@ import 'package:contact_art/global/common/toast.dart';
 import 'package:contact_art/models/User.dart' as AppUser;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -323,6 +325,11 @@ class _SignUpPageState extends State<SignUpPage> {
       );
 
       String userId = await _userController.createUser(user) ?? '';
+       Provider.of<UserProvider>(context, listen: false)
+            .setUser(user); 
+
+      Provider.of<UserProvider>(context, listen: false)
+          .setUserId(userId);
 
       if (userId.isNotEmpty && userId != '') {
         showToast(
@@ -334,7 +341,7 @@ class _SignUpPageState extends State<SignUpPage> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                HomePage(userId: userId), // Pasa el ID del usuario a HomePage
+                const HomePage(), // Pasa el ID del usuario a HomePage
           ),
         );
       } else {

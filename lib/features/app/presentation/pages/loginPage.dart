@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/features/app/presentation/pages/signUpPage.dart';
 import 'package:contact_art/features/app/presentation/widgets/formContainerLoginWidget.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:contact_art/models/User.dart' as AppUser;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -162,19 +165,26 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       showToast(message: 'Ingreso exitoso');
+
       final CollectionReference users =
           FirebaseFirestore.instance.collection('users');
       DocumentSnapshot userDoc = await users.doc(user.uid).get();
       String firestoreUserId = userDoc.id;
+
+      // ignore: use_build_context_synchronously
+      Provider.of<UserProvider>(context, listen: false)
+            .setUser(AppUser.User.fromJson(userDoc.data() as Map<String, dynamic>)); 
+
+      Provider.of<UserProvider>(context, listen: false)
+          .setUserId(firestoreUserId);
+          
       print(firestoreUserId);
 
       // ignore: use_build_context_synchronously
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(
-              userId:
-                  firestoreUserId), // Esto Pasa el ID del usuario a HomePage
+          builder: (context) => const HomePage(), // Esto Pasa el ID del usuario a HomePage
         ),
       );
     } else {

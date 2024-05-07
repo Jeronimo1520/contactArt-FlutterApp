@@ -73,5 +73,6 @@ class FireBaseAuthService {
 
       return userCredential.user;
     }
+    return null;
   }
 }
