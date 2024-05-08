@@ -36,7 +36,7 @@ class MainApp extends StatelessWidget {
         '/signup': (context) => SignUpPage(),
         '/home': (context) => const HomePage(),
         '/editProfile': (context) => const EditProfilePage(),
-        '/addProduct': (context) => const AddProductPage(),
+        '/addProduct': (context) =>  AddProductPage(),
         '/perfil': (context) => ProfilePage(),
       },
       debugShowCheckedModeBanner: false,

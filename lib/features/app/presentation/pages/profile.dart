@@ -1,5 +1,6 @@
 import 'package:contact_art/controllers/UserController.dart';
 import 'package:contact_art/controllers/UserProvider.dart';
+import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
 import 'package:contact_art/models/User.dart';
@@ -59,8 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EditProfilePage(
-                                  user: _user, userId: _userId),
+                              builder: (context) =>
+                                  EditProfilePage(user: _user, userId: _userId),
                             ),
                           );
                         },
@@ -105,8 +106,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/addProduct');
-                      // Acción al presionar el botón "Añadir producto"
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddProductPage()),
+                      );
                     },
                     child: const Text('Añadir producto'),
                   ),
@@ -132,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Obtén el User y el userId desde el UserProvider
     User user = userProvider.user;
     String userId = userProvider.userId;
-    
+
     // Asigna los valores a las variables de tu página
     _user = user;
     _userId = userId;
