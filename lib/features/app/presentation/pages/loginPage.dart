@@ -162,12 +162,12 @@ class _LoginPageState extends State<LoginPage> {
       User? user = await _auth.signInWithEmailAndPassword(email, password);
       if (user != null) {
         showToast(message: 'Ingreso exitoso');
-
+        print("llego");
         final CollectionReference users =
             FirebaseFirestore.instance.collection('users');
         DocumentSnapshot userDoc = await users.doc(user.uid).get();
         String firestoreUserId = userDoc.id;
-
+        print("llego");
         // ignore: use_build_context_synchronously
         Provider.of<UserProvider>(context, listen: false).setUser(
             AppUser.User.fromJson(userDoc.data() as Map<String, dynamic>));
@@ -175,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
         Provider.of<UserProvider>(context, listen: false)
             .setUserId(firestoreUserId);
 
-        print(firestoreUserId);
+        print("USUARIO ID FIRESTORE: ${firestoreUserId}");
 
         // ignore: use_build_context_synchronously
         Navigator.push(
