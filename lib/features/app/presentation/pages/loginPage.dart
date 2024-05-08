@@ -109,13 +109,15 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           onPressed: () async {
-                            User? user =
-                                await FireBaseAuthService.signInWithGoogle(); // Inicia sesión con Google
+                            User? user = await FireBaseAuthService
+                                .signInWithGoogle(); // Inicia sesión con Google
                             if (user != null) {
                               print('Usuario logueado con Google ${user.uid}');
                               Navigator.pushNamed(context, '/home');
-                            }else{
-                              showToast(message: 'Error al iniciar sesión con Google');
+                            } else {
+                              showToast(
+                                  message:
+                                      'Error al iniciar sesión con Google');
                             }
                           }))),
               const SizedBox(height: 20),
@@ -156,39 +158,41 @@ class _LoginPageState extends State<LoginPage> {
     );
     String email = _emailController.text;
     String password = _passwordController.text;
+    try {
+      User? user = await _auth.signInWithEmailAndPassword(email, password);
+      if (user != null) {
+        showToast(message: 'Ingreso exitoso');
 
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
+        final CollectionReference users =
+            FirebaseFirestore.instance.collection('users');
+        DocumentSnapshot userDoc = await users.doc(user.uid).get();
+        String firestoreUserId = userDoc.id;
 
+        // ignore: use_build_context_synchronously
+        Provider.of<UserProvider>(context, listen: false).setUser(
+            AppUser.User.fromJson(userDoc.data() as Map<String, dynamic>));
+
+        Provider.of<UserProvider>(context, listen: false)
+            .setUserId(firestoreUserId);
+
+        print(firestoreUserId);
+
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                const HomePage(), // Esto Pasa el ID del usuario a HomePage
+          ),
+        );
+      } else {
+        return null;
+      }
+    } catch (e) {
+      showToast(message: 'Error al iniciar sesión');
+    }
     setState(() {
       _isSigning = false;
     });
-
-    if (user != null) {
-      showToast(message: 'Ingreso exitoso');
-
-      final CollectionReference users =
-          FirebaseFirestore.instance.collection('users');
-      DocumentSnapshot userDoc = await users.doc(user.uid).get();
-      String firestoreUserId = userDoc.id;
-
-      // ignore: use_build_context_synchronously
-      Provider.of<UserProvider>(context, listen: false)
-            .setUser(AppUser.User.fromJson(userDoc.data() as Map<String, dynamic>)); 
-
-      Provider.of<UserProvider>(context, listen: false)
-          .setUserId(firestoreUserId);
-          
-      print(firestoreUserId);
-
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(), // Esto Pasa el ID del usuario a HomePage
-        ),
-      );
-    } else {
-      return null;
-    }
   }
 }
