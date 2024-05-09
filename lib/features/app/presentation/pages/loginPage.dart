@@ -50,35 +50,32 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: _obscureText,
               ),
               const SizedBox(height: 20),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      child: _isSigning
-                          ? const CircularProgressIndicator(
+                    ),
+                    child: _isSigning
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text('Ingresar',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
                               color: Colors.white,
-                            )
-                          : const Text('Ingresar',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                              )),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _signIn();
-                        } else {
-                          showToast(
-                              message:
-                                  'Por favor, diligencia todos los campos');
-                        }
-                      }),
-                ),
+                            )),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _signIn();
+                      } else {
+                        showToast(
+                            message: 'Por favor, diligencia todos los campos');
+                      }
+                    }),
               ),
               const SizedBox(height: 5),
               Align(
@@ -162,18 +159,19 @@ class _LoginPageState extends State<LoginPage> {
       User? user = await _auth.signInWithEmailAndPassword(email, password);
       if (user != null) {
         showToast(message: 'Ingreso exitoso');
-        print("llego");
+        print("llego1");
         final CollectionReference users =
             FirebaseFirestore.instance.collection('users');
         DocumentSnapshot userDoc = await users.doc(user.uid).get();
         String firestoreUserId = userDoc.id;
-        print("llego");
+        print("llego2");
         // ignore: use_build_context_synchronously
         Provider.of<UserProvider>(context, listen: false).setUser(
             AppUser.User.fromJson(userDoc.data() as Map<String, dynamic>));
 
         Provider.of<UserProvider>(context, listen: false)
             .setUserId(firestoreUserId);
+        print("llego3");
 
         print("USUARIO ID FIRESTORE: ${firestoreUserId}");
 
