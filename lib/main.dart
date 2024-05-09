@@ -1,3 +1,4 @@
+import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:contact_art/features/app/presentation/splash_screen/splashScreen.dart';
 import 'package:contact_art/features/app/presentation/pages/loginPage.dart';
+import 'package:provider/provider.dart';
 
 import 'features/app/presentation/pages/signUpPage.dart';
 
@@ -14,7 +16,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
-  ).then((value) => runApp(const MainApp()));
+  ).then((value) => runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: const MainApp(),
+    ),
+  ));
 }
 
 class MainApp extends StatelessWidget {
@@ -29,7 +36,7 @@ class MainApp extends StatelessWidget {
         '/signup': (context) => SignUpPage(),
         '/home': (context) => const HomePage(),
         '/editProfile': (context) => const EditProfilePage(),
-        '/addProduct': (context) => const AddProductPage(),
+        '/addProduct': (context) =>  AddProductPage(),
         '/perfil': (context) => ProfilePage(),
       },
       debugShowCheckedModeBanner: false,

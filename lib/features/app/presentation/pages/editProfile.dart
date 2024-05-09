@@ -1,7 +1,9 @@
 import 'package:contact_art/controllers/UserController.dart';
+import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key, this.user, this.userId}) : super(key: key);
@@ -97,7 +99,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _UpdateUser() async{
     try {
-      print(widget.user!.id);
+      print("User id: ${widget.userId}");
       await userController.updateUserData(
         widget.userId,
         _usernameController.text,
@@ -105,6 +107,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _facebookController.text,
         _descriptionController.text,
       );
+
+      User user = await userController.getUser(widget.userId!);
+      Provider.of<UserProvider>(context, listen: false).setUser(user);
+
       showToast(message: 'Perfil actualizado correctamente');
     } catch (e) {
       print(e);

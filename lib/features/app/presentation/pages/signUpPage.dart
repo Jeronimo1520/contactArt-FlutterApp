@@ -1,3 +1,4 @@
+import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/controllers/userController.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
@@ -6,6 +7,7 @@ import 'package:contact_art/global/common/toast.dart';
 import 'package:contact_art/models/User.dart' as AppUser;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -58,6 +60,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       validator: validateEmail,
                       decoration: InputDecoration(
                         labelText: 'Correo',
@@ -72,6 +75,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: nameController,
+                      keyboardType: TextInputType.name,
                       validator: validateName,
                       decoration: InputDecoration(
                         labelText: 'Nombre',
@@ -90,6 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: lastNameController,
+                      keyboardType: TextInputType.name,
                       validator: validateLastName,
                       decoration: InputDecoration(
                         labelText: 'Apellido',
@@ -104,6 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(
                     child: TextFormField(
                       controller: phoneController,
+                      keyboardType: TextInputType.phone,
                       validator: validatePhone,
                       decoration: InputDecoration(
                         labelText: 'Teléfono',
@@ -119,6 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: idController,
+                keyboardType: TextInputType.number,
                 validator: validateId,
                 decoration: InputDecoration(
                   labelText: 'Cédula/NIT',
@@ -131,6 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: passwordController,
+                keyboardType: TextInputType.visiblePassword,
                 validator: validatePassword,
                 obscureText: obscureText,
                 decoration: InputDecoration(
@@ -317,6 +325,11 @@ class _SignUpPageState extends State<SignUpPage> {
       );
 
       String userId = await _userController.createUser(user) ?? '';
+       Provider.of<UserProvider>(context, listen: false)
+            .setUser(user); 
+
+      Provider.of<UserProvider>(context, listen: false)
+          .setUserId(userId);
 
       if (userId.isNotEmpty && userId != '') {
         showToast(
@@ -328,7 +341,7 @@ class _SignUpPageState extends State<SignUpPage> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                HomePage(userId: userId), // Pasa el ID del usuario a HomePage
+                const HomePage(), // Pasa el ID del usuario a HomePage
           ),
         );
       } else {

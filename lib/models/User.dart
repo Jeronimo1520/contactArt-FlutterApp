@@ -63,4 +63,9 @@ class User{
       'instagramLink': instagramLink,
     };
   }
+
+  @override
+  String toString() {
+    return 'User{id: $id, name: $name}';
+  }
 }

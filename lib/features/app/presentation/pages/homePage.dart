@@ -6,9 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class HomePage extends StatefulWidget {
-   final String? userId;
 
-  const HomePage({Key? key, this.userId}) : super(key: key);
+
+  const HomePage({Key? key}) : super(key: key);
 
 
   @override
@@ -157,7 +157,6 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       bottomNavigationBar: BottomNavBar(
-        userId: widget.userId,
         selectedIndex: 2,
         context: context,
       ),
