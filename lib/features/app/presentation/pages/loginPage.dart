@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:contact_art/controllers/UserController.dart';
 import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final FireBaseAuthService _auth = FireBaseAuthService();
+  final UserController _userController = UserController();
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -105,17 +107,8 @@ class _LoginPageState extends State<LoginPage> {
                                   )),
                             ],
                           ),
-                          onPressed: () async {
-                            User? user = await FireBaseAuthService
-                                .signInWithGoogle(); // Inicia sesión con Google
-                            if (user != null) {
-                              print('Usuario logueado con Google ${user.uid}');
-                              Navigator.pushNamed(context, '/home');
-                            } else {
-                              showToast(
-                                  message:
-                                      'Error al iniciar sesión con Google');
-                            }
+                          onPressed: () {
+                            _signInGoogle();
                           }))),
               const SizedBox(height: 20),
               Row(
@@ -147,6 +140,49 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _signInGoogle() async {
+    User? user = await FireBaseAuthService.signInWithGoogle();
+    String? userId = user!.uid;
+    print('Usuario logueado con Google ${user.uid}');
+    bool exists = await _userController.userExists(user.email!);
+    if (!exists) {
+      AppUser.User userModel = AppUser.User(
+          id: userId,
+          email: user.email?.split(' ')[0] ?? '',
+          idNIT: '',
+          name: user.displayName?.split(' ')[0] ?? '',
+          lastName: user.displayName?.split(' ')[1] ?? '',
+          phone: user.phoneNumber ?? '',
+          userName: user.displayName?.split(' ')[0] ?? '',
+          photoUrl: user.photoURL,
+          termsAccepted: true,
+          type: 'comprador');
+      await _userController.createUser(userModel);
+      // ignore: avoid_print
+      print('Usuario creado con ID: $userId');
+      Navigator.pushNamed(context, '/home');
+    } else {
+      final CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      DocumentSnapshot userDoc = await users.doc(user.uid).get();
+      String userId = userDoc.id;
+      AppUser.User userModel =
+          AppUser.User.fromJson(userDoc.data() as Map<String, dynamic>);
+
+      print('Usuario ya existe con ID: $userId');
+      print('Usuario ya existe con ID: ${userModel.id}');
+
+      if (userModel.id == null) {
+        userModel.id = userId;
+        await _userController.updateUserData(
+            userId, userModel.userName, '', '', '');
+      }
+      Provider.of<UserProvider>(context, listen: false).setUser(userModel);
+      Provider.of<UserProvider>(context, listen: false).setUserId(userId);
+    }
+    Navigator.pushNamed(context, '/home');
+  }
+
   void _signIn() async {
     setState(
       () {
@@ -159,19 +195,18 @@ class _LoginPageState extends State<LoginPage> {
       User? user = await _auth.signInWithEmailAndPassword(email, password);
       if (user != null) {
         showToast(message: 'Ingreso exitoso');
-        print("llego1");
+
         final CollectionReference users =
             FirebaseFirestore.instance.collection('users');
         DocumentSnapshot userDoc = await users.doc(user.uid).get();
         String firestoreUserId = userDoc.id;
-        print("llego2");
+
         // ignore: use_build_context_synchronously
         Provider.of<UserProvider>(context, listen: false).setUser(
             AppUser.User.fromJson(userDoc.data() as Map<String, dynamic>));
 
         Provider.of<UserProvider>(context, listen: false)
             .setUserId(firestoreUserId);
-        print("llego3");
 
         print("USUARIO ID FIRESTORE: ${firestoreUserId}");
 

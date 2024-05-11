@@ -45,5 +45,18 @@ class UserController {
     });
   }
 
+  Future<bool> userExists(String email) async {
+    try {
+      QuerySnapshot querySnapshot = await db
+          .collection(collection)
+          .where('email', isEqualTo: email)
+          .get();
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+}
+
 
 }
