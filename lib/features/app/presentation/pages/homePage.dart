@@ -2,6 +2,7 @@ import 'package:contact_art/controllers/productController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'DetailProduct.dart';
 
 
 
@@ -165,28 +166,4 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class DetailPage extends StatelessWidget {
-  final DocumentSnapshot product;
-
-  DetailPage({required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Detalle del Producto'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Nombre del producto: ${product['name']}'),
-            Text('Precio del producto: ${product['price']}'),
-            // Agrega aquí más detalles sobre el producto
-          ],
-        ),
-      ),
-    );
-  }
-}
 
