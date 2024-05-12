@@ -48,9 +48,11 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   DocumentSnapshot product = snapshot.data!.docs[index];
               
-                  return GestureDetector(
-                    onPanEnd: (details) {
-                      if (details.velocity.pixelsPerSecond.dx > 0) {
+                  return Dismissible(
+                    key: UniqueKey(), 
+                    direction: DismissDirection.horizontal, 
+                    confirmDismiss: (direction)async {
+                      if (direction == DismissDirection.startToEnd) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -59,10 +61,11 @@ class _HomePageState extends State<HomePage> {
                         );
                       } else {
                         _controller.nextPage(
-                          duration: Duration(milliseconds: 300),
+                          duration: Duration(milliseconds: 1),
                           curve: Curves.easeIn,
                         );
                       }
+                      return false;
                     },
                     child: Container(
                       height: 320,
