@@ -34,6 +34,14 @@ class ProductController {
   }
 
   Stream<QuerySnapshot> getProductsStream() {
-    return FirebaseFirestore.instance.collection('products').snapshots();
+    return FirebaseFirestore.instance.collection(collection).snapshots();
+  }
+
+  Stream<QuerySnapshot> searchProductsStream(String searchTerm) {
+    return FirebaseFirestore.instance
+        .collection(collection)
+        .where('name', isGreaterThanOrEqualTo: searchTerm)
+        .where('name', isLessThan: searchTerm + 'z')
+        .snapshots();
   }
 }
