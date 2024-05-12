@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/productController.dart';
 import 'package:contact_art/controllers/uploadImage.dart';
 import 'package:flutter/material.dart';
+import 'package:contact_art/global/common/addProductsValidators.dart';
 import 'package:contact_art/models/Product.dart' as AppProduct;
 
 class AddProductPage extends StatefulWidget {
@@ -17,7 +17,6 @@ class _AddProductPageState extends State<AddProductPage> {
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  final _firestore = FirebaseFirestore.instance;
   String? categoryType = 'Categoría 1';
 
   File? imageToUpload;
@@ -35,16 +34,19 @@ class _AddProductPageState extends State<AddProductPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
+              validator: validateName,
               controller: nameController,
               decoration: InputDecoration(labelText: 'Nombre del producto'),
             ),
             SizedBox(height: 16),
             TextFormField(
+              validator: validatePrice,
               controller: priceController,
               decoration: InputDecoration(labelText: 'Precio del producto'),
             ),
             SizedBox(height: 16),
             TextFormField(
+              validator: validateDescription,
               controller: descriptionController,
               decoration: InputDecoration(labelText: 'Descripción'),
             ),
@@ -108,7 +110,7 @@ class _AddProductPageState extends State<AddProductPage> {
       name: nameController.text,
       img: uploaded.toString(),
       description: descriptionController.text,
-      category: 'Categoría 1',
+      category: categoryType!,
     );
 
     final result = await _productController.createProduct(product);

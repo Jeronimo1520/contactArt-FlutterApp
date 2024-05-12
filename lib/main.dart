@@ -1,5 +1,6 @@
 import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
+import 'package:contact_art/features/app/presentation/pages/cartPage.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/app/presentation/pages/profile.dart';
@@ -38,6 +39,7 @@ class MainApp extends StatelessWidget {
         '/editProfile': (context) => const EditProfilePage(),
         '/addProduct': (context) =>  AddProductPage(),
         '/perfil': (context) => ProfilePage(),
+        '/carrito':(context) => CartPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',

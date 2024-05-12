@@ -19,27 +19,31 @@ String? validateEmail(String? value) {
 String? validateName(String? value) {
   if (value == null || value.isEmpty) {
     return 'Por favor, ingresa tu nombre';
-  } 
+  }
   return null;
 }
 
 String? validateLastName(String? value) {
   if (value == null || value.isEmpty) {
     return 'Por favor, ingresa tu apellido';
-  } 
+  }
   return null;
 }
 
 String? validatePhone(String? value) {
   if (value == null || value.isEmpty) {
     return 'Por favor, ingresa tu teléfono';
-  } 
+  } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+    return 'Por favor, ingresa solo números';
+  }
   return null;
 }
 
 String? validateId(String? value) {
   if (value == null || value.isEmpty) {
-    return 'Por favor, ingresa tu Cédula/NIT';	
-  } 
+    return 'Por favor, ingresa tu Cédula/NIT';
+  } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+    return 'Por favor, ingresa solo números';
+  }
   return null;
 }
