@@ -2,7 +2,7 @@ import 'package:contact_art/controllers/productController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'DetailProduct.dart';
+import 'productDetail.dart';
 
 
 

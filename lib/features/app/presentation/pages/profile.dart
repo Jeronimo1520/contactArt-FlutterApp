@@ -1,5 +1,5 @@
-import 'package:contact_art/controllers/UserController.dart';
-import 'package:contact_art/controllers/UserProvider.dart';
+import 'package:contact_art/controllers/userController.dart';
+import 'package:contact_art/controllers/userProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
@@ -29,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text('Perfil de Usuario'),
         ),
         body: Padding(
