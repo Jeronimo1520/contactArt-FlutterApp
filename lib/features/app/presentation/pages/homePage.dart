@@ -1,16 +1,12 @@
-import 'package:contact_art/controllers/productController.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:contact_art/controllers/ProductController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'productDetail.dart';
 
-
-
 class HomePage extends StatefulWidget {
-
-
   const HomePage({Key? key}) : super(key: key);
-
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -19,16 +15,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final PageController _controller = PageController(keepPage: false);
   final ProductController productController = ProductController();
+  late String _searchTerm = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text('ContactArt'),
+        title: TextField(
+          decoration: InputDecoration(
+            hintText: 'Buscar',
+            border: InputBorder.none,
+          ),
+          onChanged: (value) {
+            setState(() {
+              _searchTerm = value;
+            });
+          },
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: productController.getProductsStream(),
+        stream: _searchTerm.isEmpty
+            ? productController.getProductsStream()
+            : productController.searchProductsStream(_searchTerm),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -37,7 +45,6 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           }
-
           return Center(
             child: Container(
               width: 380,
