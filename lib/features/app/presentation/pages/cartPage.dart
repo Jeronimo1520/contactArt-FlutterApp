@@ -1,5 +1,7 @@
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:contact_art/controllers/cartController.dart';
+import 'package:provider/provider.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -9,26 +11,27 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  List<CartModel> cartItems = [];
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Provider.of<CartController>(context);
+    final items = cartController.cartItems;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Carrito'),
+        title: const Text('Carrito'),
       ),
       body: ListView.builder(
-        itemCount: cartItems.length,
+        itemCount: items.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(cartItems[index].title),
-            subtitle: Text(cartItems[index].price.toString()),
+            title: Text(items[index].name),
+            subtitle: Text(items[index].price.toString()),
             trailing: IconButton(
-              icon: Icon(Icons.remove),
+              icon: const Icon(Icons.delete),
               onPressed: () {
                 setState(() {
-                  cartItems.removeAt(index);
+                  items.removeAt(index);
                 });
               },
             ),
@@ -41,11 +44,4 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-}
-
-class CartModel {
-  final String title;
-  final String price;
-
-  CartModel({required this.title, required this.price});
 }

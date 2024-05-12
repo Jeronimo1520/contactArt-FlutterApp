@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:contact_art/features/app/presentation/pages/cartPage.dart';
+import 'package:contact_art/controllers/cartController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class DetailPage extends StatelessWidget {
   final DocumentSnapshot product;
 
   DetailPage({required this.product});
-  
-  get cartItems => null;
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Provider.of<CartController>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
           title: Text(
@@ -96,12 +96,8 @@ class DetailPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            String productTitle = product['name'];
-                            String productPrice = product['price'];
-
-                            CartModel newCartItem = CartModel(
-                                title: productTitle, price: productPrice);
-                                cartItems.add(newCartItem);
+                            cartController.addToCart(
+                                "'${product['name']}'", '${product['price']}');
                           },
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,

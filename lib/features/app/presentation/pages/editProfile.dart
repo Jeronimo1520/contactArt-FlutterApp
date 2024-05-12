@@ -1,5 +1,5 @@
-import 'package:contact_art/controllers/UserController.dart';
-import 'package:contact_art/controllers/UserProvider.dart';
+import 'package:contact_art/controllers/userController.dart';
+import 'package:contact_art/controllers/userProvider.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
  final UserController userController = UserController();
 
-  // Placeholder image URL (you can replace this with actual image data)
+
   final String _selectedImage = 'https://via.placeholder.com/150';
 
    @override
@@ -33,10 +33,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
 
   void _selectImage() {
-    //BORREN LOS COMENTARIOS CUANDO YA NO SEAN NECESARIOS
-    // Implement image picker logic here
-    // For example, use image_picker package to select an image from the device
-    // Update _selectedImage with the selected image URL
+
   }
 
   void _loadUserData() {
