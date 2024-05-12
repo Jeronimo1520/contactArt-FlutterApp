@@ -1,19 +1,35 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:contact_art/controllers/FavoritesController.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   final DocumentSnapshot product;
+  final String? userId;
 
-  DetailPage({required this.product});
+  DetailPage({required this.product, required this.userId});
+  
+  @override
+  _DetailPageState createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  FavoritesController? _favoritesController;
+  bool isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _favoritesController = FavoritesController(widget.userId);
+    
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('${product['name']}',)
+          title: Text('${widget.product['name']}',)
           
         ),
         body: Center(
@@ -25,7 +41,7 @@ class DetailPage extends StatelessWidget {
                   border: Border.all(width: 2, color: Colors.white),
                 ),
                 child: Image.network(
-                  product['img'],
+                  widget.product['img'],
                   fit: BoxFit.cover,
                   height: 330,
                 ),
@@ -36,7 +52,7 @@ class DetailPage extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    'Precio: \$${product['price']}',
+                    'Precio: \$${widget.product['price']}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -57,7 +73,7 @@ class DetailPage extends StatelessWidget {
                   ),
                   child: SingleChildScrollView( 
                     child: Text(
-                      ' ${product['description']}', 
+                      ' ${widget.product['description']}', 
                         style: TextStyle(fontSize: 15),
                     ),
                   ),
@@ -107,22 +123,41 @@ class DetailPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 28),
-                  GestureDetector(
-                    onTap: () {
-                    // Agregar aquí la lógica para agregar a favoritos
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.favorite_border, size: 25),
-                        Text(
-                          'Favoritos',
-                          style: TextStyle(fontSize: 12),
+                  Flexible(
+                      child: GestureDetector(
+                        onTap:() async {
+                          if(isFavorite){
+                            await _favoritesController?.removeFavorite(widget.product.id);
+                            print('Producto eliminado de favoritos');
+
+                          }else{
+                            await _favoritesController?.addFavorite(widget.product.id);
+                            print('Producto agregado a favoritos');
+                          }
+
+                          setState((){
+                            isFavorite = !isFavorite;
+                          });
+                                                
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              color: isFavorite ? Colors.purple.shade700 : Colors.black,
+                              size: 25
+                            ),
+                            Text(
+                              'Favoritos',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                ),
+                
                   ],
                 ),
                 ]
