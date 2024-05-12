@@ -57,7 +57,9 @@ class FireBaseAuthService {
       'email',
       'https://www.googleapis.com/auth/contacts.readonly',
     ];
-    GoogleSignIn signIn = GoogleSignIn(scopes: scopes,);
+    GoogleSignIn signIn = GoogleSignIn(
+      scopes: scopes,
+    );
 
     GoogleSignInAccount? googleSignInAccount = await signIn.signIn();
     if (googleSignInAccount != null) {
@@ -75,4 +77,10 @@ class FireBaseAuthService {
     }
     return null;
   }
+
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+  }
+
 }

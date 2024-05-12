@@ -3,6 +3,7 @@ import 'package:contact_art/controllers/UserProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
+import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   User? _user;
   UserController userController = UserController();
   String? _userId;
+  FireBaseAuthService _auth = FireBaseAuthService();
 
   @override
   void initState() {
@@ -25,9 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Perfil',
-      home: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           title: const Text('Perfil de Usuario'),
         ),
@@ -114,6 +114,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     child: const Text('Añadir producto'),
                   ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          await _auth.signOut();
+                          Navigator.pushNamed(context, '/login');
+                        } catch (e) {
+                          // Muestra un mensaje de error si algo sale mal
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error al cerrar sesión: $e'),
+                            ),
+                          );
+                          print(e.toString());
+                        }
+                      },
+                      child: const Text('Cerrar sesión')),
                 ],
               );
             },
@@ -123,21 +139,16 @@ class _ProfilePageState extends State<ProfilePage> {
           selectedIndex: 0,
           context: context,
         ),
-      ),
-      debugShowCheckedModeBanner: false,
-    );
+      );
   }
 
   void _loadUserData() {
-    // Obtén el UserProvider
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
 
-    // Obtén el User y el userId desde el UserProvider
     User user = userProvider.user;
     String userId = userProvider.userId;
 
-    // Asigna los valores a las variables de tu página
     _user = user;
     _userId = userId;
 

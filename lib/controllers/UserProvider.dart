@@ -18,8 +18,4 @@ class UserProvider with ChangeNotifier{
     _userId = userId;
     notifyListeners();
   }
-
-  Stream<User?> get userStream async* {
-    yield _user;
-  }
 }

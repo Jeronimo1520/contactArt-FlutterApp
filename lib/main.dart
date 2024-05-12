@@ -32,7 +32,7 @@ class MainApp extends StatelessWidget {
     return  MaterialApp(
 
       routes: {
-        '/login': (context) => const LoginPage(),
+        '/login': (context) =>  LoginPage(),
         '/signup': (context) => SignUpPage(),
         '/home': (context) => const HomePage(),
         '/editProfile': (context) => const EditProfilePage(),
