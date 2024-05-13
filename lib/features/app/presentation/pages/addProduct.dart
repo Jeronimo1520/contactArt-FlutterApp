@@ -4,6 +4,8 @@ import 'package:contact_art/controllers/uploadImage.dart';
 import 'package:flutter/material.dart';
 import 'package:contact_art/global/common/addProductsValidators.dart';
 import 'package:contact_art/models/Product.dart' as AppProduct;
+import 'package:provider/provider.dart';
+import 'package:contact_art/controllers/userProvider.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -102,15 +104,16 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   void _publishProduct() async {
-
     final uploaded = await uploadImage(imageToUpload!);
-
+    // ignore: use_build_context_synchronously
+    String userId = Provider.of<UserProvider>(context, listen: false).userId;
     AppProduct.Product product = AppProduct.Product(
       price: priceController.text,
       name: nameController.text,
       img: uploaded.toString(),
       description: descriptionController.text,
       category: categoryType!,
+      userId: userId,
     );
 
     final result = await _productController.createProduct(product);

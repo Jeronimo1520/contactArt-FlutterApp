@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: TextField(
           decoration: InputDecoration(
             hintText: 'Buscar',
@@ -74,7 +75,10 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailPage(product: product, userId: widget.userId,),
+                            builder: (context) => DetailPage(
+                              product: product,
+                              userId: widget.userId,
+                            ),
                           ),
                         );
                       } else {
@@ -160,8 +164,9 @@ class _HomePageState extends State<HomePage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                DetailPage(product: product, userId: userId),
+                                            builder: (context) => DetailPage(
+                                                product: product,
+                                                userId: userId),
                                           ),
                                         );
                                       },
