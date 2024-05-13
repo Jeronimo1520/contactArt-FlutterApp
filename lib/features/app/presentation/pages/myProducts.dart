@@ -125,7 +125,6 @@ class _MyProductsPageState extends State<MyProductsPage> {
               TextFormField(
                 initialValue: newProductPrice,
                 decoration: InputDecoration(labelText: 'Precio del producto'),
-
                 onChanged: (value) {
                   newProductPrice = value;
                 },
@@ -134,7 +133,6 @@ class _MyProductsPageState extends State<MyProductsPage> {
                 initialValue: newProductDescription,
                 decoration:
                     InputDecoration(labelText: 'Descripción del producto'),
-
                 onChanged: (value) {
                   newProductDescription = value;
                 },
@@ -183,7 +181,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
               child: Text('Guardar'),
               onPressed: () async {
                 updateProduct(productId, newProductName, newProductPrice,
-                    newProductDescription, newProductCategory);
+                    newProductDescription, newProductCategory, imageToUpload);
                 Navigator.of(context).pop();
               },
             ),
@@ -194,7 +192,8 @@ class _MyProductsPageState extends State<MyProductsPage> {
   }
 
   updateProduct(productId, newProductName, newProductPrice,
-      newProductDescription, newProductCategory) async {
+      newProductDescription, newProductCategory, imageToUpload) async {
+    final uploaded = await uploadImage(imageToUpload!);
     await FirebaseFirestore.instance
         .collection('products')
         .doc(productId)
@@ -203,6 +202,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
       'price': newProductPrice,
       'category': newProductCategory,
       'description': newProductDescription,
+      'img': uploaded.toString(),
     });
   }
 }
