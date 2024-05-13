@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/ProductController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
-import 'productDetail.dart';
+import 'productDetails.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+  final String? userId;
+  const HomePage({Key? key, this.userId}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -15,6 +16,16 @@ class _HomePageState extends State<HomePage> {
   final PageController _controller = PageController(keepPage: false);
   final ProductController productController = ProductController();
   late String _searchTerm = '';
+  String? userId;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      userId = user.uid;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailPage(product: product),
+                            builder: (context) => DetailPage(product: product, userId: widget.userId,),
                           ),
                         );
                       } else {
@@ -150,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                DetailPage(product: product),
+                                                DetailPage(product: product, userId: userId),
                                           ),
                                         );
                                       },
