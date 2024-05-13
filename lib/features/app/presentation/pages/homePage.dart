@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/ProductController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
@@ -25,6 +24,7 @@ class _HomePageState extends State<HomePage> {
           decoration: InputDecoration(
             hintText: 'Buscar',
             border: InputBorder.none,
+            suffixIcon: Icon(Icons.search),
           ),
           onChanged: (value) {
             setState(() {
@@ -54,11 +54,11 @@ class _HomePageState extends State<HomePage> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot product = snapshot.data!.docs[index];
-              
+
                   return Dismissible(
-                    key: UniqueKey(), 
-                    direction: DismissDirection.horizontal, 
-                    confirmDismiss: (direction)async {
+                    key: UniqueKey(),
+                    direction: DismissDirection.horizontal,
+                    confirmDismiss: (direction) async {
                       if (direction == DismissDirection.startToEnd) {
                         Navigator.push(
                           context,
@@ -84,23 +84,22 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                  height: 300, 
-                                  width: 380, 
+                              Expanded(
+                                child: Container(
+                                  height: 300,
+                                  width: 380,
                                   child: Image.network(
                                     product['img'],
-                                    fit:BoxFit.cover,
-                                  ),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                
+                              ),
                               Text(
                                 product['name'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 25,
-                                ) ,
+                                ),
                               ),
                               Text(
                                 '\$${product['price']}',
@@ -117,12 +116,13 @@ class _HomePageState extends State<HomePage> {
                                     width: 80,
                                     child: TextButton(
                                       style: TextButton.styleFrom(
-                                        backgroundColor: Colors.red.shade700,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(40),
-                                        )
-                                      ),
-                                      child: Icon(Icons.arrow_back, color: Colors.white),
+                                          backgroundColor: Colors.red.shade700,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                          )),
+                                      child: Icon(Icons.arrow_back,
+                                          color: Colors.white),
                                       onPressed: () {
                                         _controller.nextPage(
                                           duration: Duration(milliseconds: 300),
@@ -131,23 +131,26 @@ class _HomePageState extends State<HomePage> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(width:100),
+                                  SizedBox(width: 100),
                                   Container(
                                     height: 80,
                                     width: 80,
                                     child: TextButton(
                                       style: TextButton.styleFrom(
-                                        backgroundColor: Colors.green.shade700,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(40),
-                                        )
-                                      ),
-                                      child: Icon(Icons.remove_red_eye, color: Colors.white),
+                                          backgroundColor:
+                                              Colors.green.shade700,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                          )),
+                                      child: Icon(Icons.remove_red_eye,
+                                          color: Colors.white),
                                       onPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => DetailPage(product: product),
+                                            builder: (context) =>
+                                                DetailPage(product: product),
                                           ),
                                         );
                                       },
@@ -174,5 +177,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
