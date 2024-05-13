@@ -4,11 +4,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:contact_art/controllers/FavoritesController.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   final DocumentSnapshot product;
+  final String? userId;
 
-  DetailPage({required this.product});
+  DetailPage({required this.product, required this.userId});
+  @override
+  _DetailPageState createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  FavoritesController? _favoritesController;
+  bool isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _favoritesController = FavoritesController(widget.userId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +31,7 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-        '${product['name']}',
+        '${widget.product['name']}',
       )),
       body: Center(
         child: Column(
@@ -27,7 +42,7 @@ class DetailPage extends StatelessWidget {
                 border: Border.all(width: 2, color: Colors.white),
               ),
               child: Image.network(
-                product['img'],
+                widget.product['img'],
                 fit: BoxFit.cover,
                 height: 330,
               ),
@@ -37,7 +52,7 @@ class DetailPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Precio: \$${product['price']}',
+                  'Precio: \$${widget.product['price']}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -58,7 +73,7 @@ class DetailPage extends StatelessWidget {
                 ),
                 child: SingleChildScrollView(
                   child: Text(
-                    ' ${product['description']}',
+                    ' ${widget.product['description']}',
                     style: TextStyle(fontSize: 15),
                   ),
                 ),
@@ -97,7 +112,8 @@ class DetailPage extends StatelessWidget {
                           ),
                           onPressed: () {
                             cartController.addToCart(
-                                "'${product['name']}'", '${product['price']}');
+                                "'${widget.product['name']}'",
+                                '${widget.product['price']}');
                           },
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -114,20 +130,40 @@ class DetailPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 28),
-                    GestureDetector(
-                      onTap: () {
-                        // Agregar aquí la lógica para agregar a favoritos
-                      },
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.favorite_border, size: 25),
-                          Text(
-                            'Favoritos',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ],
+                    Flexible(
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (isFavorite) {
+                            await _favoritesController
+                                ?.removeFavorite(widget.product.id);
+                            print('Producto eliminado de favoritos');
+                          } else {
+                            await _favoritesController
+                                ?.addFavorite(widget.product.id);
+                            print('Producto agregado a favoritos');
+                          }
+                          setState(() {
+                            isFavorite = !isFavorite;
+                          });
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: isFavorite
+                                    ? Colors.purple.shade700
+                                    : Colors.black,
+                                size: 25),
+                            Text(
+                              'Favoritos',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
