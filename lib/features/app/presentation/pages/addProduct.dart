@@ -19,7 +19,7 @@ class _AddProductPageState extends State<AddProductPage> {
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  String? categoryType = 'Categoría 1';
+  String? categoryType = '';
 
   File? imageToUpload;
 
@@ -60,7 +60,9 @@ class _AddProductPageState extends State<AddProductPage> {
                         child: Text(category),
                       ))
                   .toList(),
-              onChanged: (value) {},
+              onChanged: (value) {
+                categoryType = value;
+              },
               decoration: InputDecoration(labelText: 'Categoría'),
             ),
             SizedBox(height: 16),
