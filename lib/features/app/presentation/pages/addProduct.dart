@@ -54,7 +54,7 @@ class _AddProductPageState extends State<AddProductPage> {
             ),
             SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              items: ['Categoría 1', 'Categoría 2', 'Categoría 3']
+              items: ['Cuadros', 'Manualidades', 'Esculturas']
                   .map((category) => DropdownMenuItem(
                         value: category,
                         child: Text(category),
@@ -127,6 +127,7 @@ class _AddProductPageState extends State<AddProductPage> {
           content: Text('Producto publicado correctamente'),
         ),
       );
+      Navigator.pushNamed(context, '/home');
     } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(

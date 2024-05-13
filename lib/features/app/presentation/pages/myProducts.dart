@@ -105,7 +105,6 @@ class _MyProductsPageState extends State<MyProductsPage> {
     String newProductPrice = productSnapshot['price'];
     String newProductDescription = productSnapshot['description'];
     String newProductCategory = productSnapshot['category'];
-    String uploaded = productSnapshot['img'];
 
     // ignore: use_build_context_synchronously
     showDialog(
@@ -138,7 +137,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
                 },
               ),
               DropdownButtonFormField<String>(
-                items: ['Categoría 1', 'Categoría 2', 'Categoría 3']
+                items: ['Cuadros', 'Manualidades', 'Esculturas']
                     .map((category) => DropdownMenuItem(
                           value: category,
                           child: Text(category),
@@ -204,5 +203,12 @@ class _MyProductsPageState extends State<MyProductsPage> {
       'description': newProductDescription,
       'img': uploaded.toString(),
     });
+    // ignore: use_build_context_synchronously
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Producto actualizado correctamente'),
+      ),
+    );
   }
 }
