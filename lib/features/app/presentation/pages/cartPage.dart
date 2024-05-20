@@ -28,14 +28,60 @@ class _CartPageState extends State<CartPage> {
             title: Text(items[index].name),
             subtitle: Text(items[index].price.toString()),
             trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  items.removeAt(index);
-                });
-                showToast(message: "Producto eliminado del carrito");
-              },
-            ),
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Eliminar producto'),
+                          content: const Text(
+                              '¿Estás seguro de que deseas eliminar este producto del carrito?'),
+                          actions: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      child: const Text(
+                                        'Cancelar',
+                                        style: TextStyle(color: Colors.purple),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.purple),
+                                      child: Text('Eliminar',
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      onPressed: () {
+                                        setState(() {
+                                          items.removeAt(index);
+                                        });
+                                        showToast(
+                                            message:
+                                                "Producto eliminado del carrito");
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        );
+                      });
+                }),
           );
         },
       ),
