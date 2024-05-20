@@ -1,4 +1,5 @@
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
+import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:contact_art/controllers/cartController.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,6 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-
   @override
   Widget build(BuildContext context) {
     final cartController = Provider.of<CartController>(context);
@@ -33,6 +33,7 @@ class _CartPageState extends State<CartPage> {
                 setState(() {
                   items.removeAt(index);
                 });
+                showToast(message: "Producto eliminado del carrito");
               },
             ),
           );

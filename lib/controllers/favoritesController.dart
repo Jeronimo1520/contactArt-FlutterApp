@@ -16,18 +16,21 @@ class FavoritesController {
     }
   }
 
-  Future<void> addFavorite(String productId) async {
+  Future<bool> addFavorite(String productId) async {
     var doc = await _firestore.collection('favorites').doc(userId).get();
     if (doc.exists) {
       List<String> favorites = List<String>.from(doc.data()?['favorites']);
       favorites.add(productId);
       await doc.reference.update({'favorites': favorites, 'userId': userId});
+      return true;
     } else {
       await doc.reference.set({
         'favorites': [productId],
         'userId': userId
       });
+      return true;
     }
+    return false;
   }
 
   Future<void> removeFavorite(String productId) async {
