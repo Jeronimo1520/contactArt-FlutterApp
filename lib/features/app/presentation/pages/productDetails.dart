@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/cartController.dart';
+import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -110,10 +111,18 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                             ),
                           ),
-                          onPressed: () {
-                            cartController.addToCart(
+                          onPressed: () async {
+                            bool result = await cartController.addToCart(
                                 "'${widget.product['name']}'",
                                 '${widget.product['price']}');
+                            if (result) {
+                              showToast(
+                                  message: "Producto agregado al carrito");
+                            } else {
+                              showToast(
+                                  message:
+                                      "Error al agregar el producto al carrito");
+                            }
                           },
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -136,11 +145,12 @@ class _DetailPageState extends State<DetailPage> {
                           if (isFavorite) {
                             await _favoritesController
                                 ?.removeFavorite(widget.product.id);
-                            print('Producto eliminado de favoritos');
+                            showToast(
+                                message: 'Producto eliminado de favoritos');
                           } else {
                             await _favoritesController
                                 ?.addFavorite(widget.product.id);
-                            print('Producto agregado a favoritos');
+                            showToast(message: 'Producto agregado a favoritos');
                           }
                           setState(() {
                             isFavorite = !isFavorite;

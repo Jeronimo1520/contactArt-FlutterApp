@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/uploadImage.dart';
 import 'package:contact_art/controllers/userProvider.dart';
+import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,8 +60,14 @@ class _MyProductsPageState extends State<MyProductsPage> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        deleteProduct(doc.id);
+                      onPressed: () async {
+                        bool result = await deleteProduct(doc.id);
+                        if (result) {
+                          showToast(
+                              message: 'Producto eliminado correctamente');
+                        } else {
+                          showToast(message: 'Error al eliminar el producto');
+                        }
                       },
                     ),
                   ],
@@ -73,25 +80,15 @@ class _MyProductsPageState extends State<MyProductsPage> {
     );
   }
 
-  void deleteProduct(String productId) async {
+  Future<bool> deleteProduct(String productId) async {
     try {
       await FirebaseFirestore.instance
           .collection('products')
           .doc(productId)
           .delete();
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Producto eliminado correctamente'),
-        ),
-      );
+      return true;
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al eliminar el producto: $e'),
-        ),
-      );
+      return false;
     }
   }
 
@@ -179,9 +176,19 @@ class _MyProductsPageState extends State<MyProductsPage> {
             TextButton(
               child: Text('Guardar'),
               onPressed: () async {
-                updateProduct(productId, newProductName, newProductPrice,
-                    newProductDescription, newProductCategory, imageToUpload);
-                Navigator.of(context).pop();
+                bool result = await updateProduct(
+                    productId,
+                    newProductName,
+                    newProductPrice,
+                    newProductDescription,
+                    newProductCategory,
+                    imageToUpload);
+                if (result) {
+                  Navigator.of(context).pop();
+                  showToast(message: 'Producto actualizado correctamente');
+                } else {
+                  showToast(message: 'Error al actualizar el producto');
+                }
               },
             ),
           ],
@@ -190,7 +197,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
     );
   }
 
-  updateProduct(productId, newProductName, newProductPrice,
+  Future<bool> updateProduct(productId, newProductName, newProductPrice,
       newProductDescription, newProductCategory, imageToUpload) async {
     final uploaded = await uploadImage(imageToUpload!);
     await FirebaseFirestore.instance
@@ -205,10 +212,6 @@ class _MyProductsPageState extends State<MyProductsPage> {
     });
     // ignore: use_build_context_synchronously
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Producto actualizado correctamente'),
-      ),
-    );
+    return true;
   }
 }

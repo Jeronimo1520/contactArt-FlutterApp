@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:contact_art/controllers/productController.dart';
 import 'package:contact_art/controllers/uploadImage.dart';
+import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:contact_art/global/common/addProductsValidators.dart';
 import 'package:contact_art/models/Product.dart' as AppProduct;
@@ -92,7 +93,12 @@ class _AddProductPageState extends State<AddProductPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      _publishProduct();
+                      bool result = await _publishProduct();
+                      if (result) {
+                        showToast(message: "Producto publicado correctamente");
+                      } else {
+                        showToast(message: "Error al publicar el producto");
+                      }
                     },
                     child: Text('Publicar producto'),
                   ),
@@ -105,7 +111,7 @@ class _AddProductPageState extends State<AddProductPage> {
     );
   }
 
-  void _publishProduct() async {
+  Future<bool> _publishProduct() async {
     final uploaded = await uploadImage(imageToUpload!);
     // ignore: use_build_context_synchronously
     String userId = Provider.of<UserProvider>(context, listen: false).userId;
@@ -128,6 +134,7 @@ class _AddProductPageState extends State<AddProductPage> {
         ),
       );
       Navigator.pushNamed(context, '/home');
+      return true;
     } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
@@ -136,5 +143,6 @@ class _AddProductPageState extends State<AddProductPage> {
         ),
       );
     }
+    return false;
   }
 }
