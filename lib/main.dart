@@ -1,8 +1,10 @@
+import 'package:contact_art/controllers/EdufinProvider.dart';
 import 'package:contact_art/controllers/cartController.dart';
 import 'package:contact_art/controllers/userProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
 import 'package:contact_art/features/app/presentation/pages/cartPage.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
+import 'package:contact_art/features/app/presentation/pages/edufinPage.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/app/presentation/pages/myProducts.dart';
 import 'package:contact_art/features/app/presentation/pages/profile.dart';
@@ -28,6 +30,9 @@ void main() async {
                 ChangeNotifierProvider(
                   create: (context) => CartController(),
                 ),
+                ChangeNotifierProvider(
+                  create: (context) => EdufinProvider(),
+                ),
               ],
               child: const MainApp(),
             ),
@@ -49,6 +54,7 @@ class MainApp extends StatelessWidget {
         '/perfil': (context) => ProfilePage(),
         '/carrito': (context) => CartPage(),
         '/products': (context) => MyProductsPage(),
+        '/informacion': (context) => EdufinPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',
