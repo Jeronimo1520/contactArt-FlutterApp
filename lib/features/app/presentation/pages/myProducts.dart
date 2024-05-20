@@ -23,7 +23,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
     super.initState();
     _productsStream = FirebaseFirestore.instance
         .collection('products')
-        .where('userId', isEqualTo: widget.userId)
+        .where('userId', isEqualTo: getUser())
         .snapshots();
   }
 
@@ -126,6 +126,13 @@ class _MyProductsPageState extends State<MyProductsPage> {
         },
       ),
     );
+  }
+
+  String getUser() {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    String userId = userProvider.userId;
+    return userId;
   }
 
   Future<bool> deleteProduct(String productId) async {
