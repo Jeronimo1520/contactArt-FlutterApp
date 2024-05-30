@@ -5,6 +5,7 @@ import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:contact_art/global/common/addProductsValidators.dart';
 import 'package:contact_art/models/Product.dart' as AppProduct;
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:provider/provider.dart';
 import 'package:contact_art/controllers/userProvider.dart';
 
@@ -17,7 +18,7 @@ class AddProductPage extends StatefulWidget {
 
 class _AddProductPageState extends State<AddProductPage> {
   TextEditingController nameController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
+  MaskedTextController priceController = MaskedTextController(mask: '000,000,000.00'); // Usa MaskedTextController
   TextEditingController descriptionController = TextEditingController();
 
   String? categoryType = '';
@@ -25,6 +26,7 @@ class _AddProductPageState extends State<AddProductPage> {
   File? imageToUpload;
 
   final ProductController _productController = ProductController();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +47,7 @@ class _AddProductPageState extends State<AddProductPage> {
             TextFormField(
               validator: validatePrice,
               controller: priceController,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: 'Precio del producto'),
             ),
             SizedBox(height: 16),
@@ -116,7 +119,7 @@ class _AddProductPageState extends State<AddProductPage> {
     // ignore: use_build_context_synchronously
     String userId = Provider.of<UserProvider>(context, listen: false).userId;
     AppProduct.Product product = AppProduct.Product(
-      price: priceController.text,
+      price: priceController.text.replaceAll(',', ''), 
       name: nameController.text,
       img: uploaded.toString(),
       description: descriptionController.text,
@@ -146,3 +149,5 @@ class _AddProductPageState extends State<AddProductPage> {
     return false;
   }
 }
+
+

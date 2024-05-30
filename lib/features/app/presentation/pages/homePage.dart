@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/ProductController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'productDetails.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           }
+
           return Center(
             child: Container(
               width: 380,
@@ -66,6 +68,19 @@ class _HomePageState extends State<HomePage> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot product = snapshot.data!.docs[index];
+
+                  // Asegúrate de que el precio se maneja como un número
+                  double price = 0.0;
+                  if (product['price'] is int) {
+                    price = product['price'].toDouble();
+                  } else if (product['price'] is double) {
+                    price = product['price'];
+                  } else if (product['price'] is String) {
+                    price = double.tryParse(product['price']) ?? 0.0;
+                  }
+
+                  // Formatea el precio
+                  final formattedPrice = NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(price);
 
                   return Dismissible(
                     key: UniqueKey(),
@@ -117,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Text(
-                                '\$${product['price']}',
+                                formattedPrice,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
@@ -133,11 +148,9 @@ class _HomePageState extends State<HomePage> {
                                       style: TextButton.styleFrom(
                                           backgroundColor: Colors.red.shade700,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(40),
+                                            borderRadius: BorderRadius.circular(40),
                                           )),
-                                      child: Icon(Icons.arrow_back,
-                                          color: Colors.white),
+                                      child: Icon(Icons.arrow_back, color: Colors.white),
                                       onPressed: () {
                                         _controller.nextPage(
                                           duration: Duration(milliseconds: 300),
@@ -152,21 +165,17 @@ class _HomePageState extends State<HomePage> {
                                     width: 80,
                                     child: TextButton(
                                       style: TextButton.styleFrom(
-                                          backgroundColor:
-                                              Colors.green.shade700,
+                                          backgroundColor: Colors.green.shade700,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(40),
+                                            borderRadius: BorderRadius.circular(40),
                                           )),
-                                      child: Icon(Icons.remove_red_eye,
-                                          color: Colors.white),
+                                      child: Icon(Icons.remove_red_eye, color: Colors.white),
                                       onPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => DetailPage(
-                                                product: product,
-                                                userId: userId),
+                                                product: product, userId: userId),
                                           ),
                                         );
                                       },
@@ -193,3 +202,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+
+

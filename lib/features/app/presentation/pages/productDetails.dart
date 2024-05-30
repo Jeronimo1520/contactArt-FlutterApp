@@ -3,9 +3,9 @@ import 'package:contact_art/controllers/cartController.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:contact_art/controllers/FavoritesController.dart';
+import 'package:intl/intl.dart';
 
 class DetailPage extends StatefulWidget {
   final DocumentSnapshot product;
@@ -29,6 +29,20 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     final cartController = Provider.of<CartController>(context, listen: false);
+
+    // Asegúrate de que el precio se maneja como un número
+    double price = 0.0;
+    if (widget.product['price'] is int) {
+      price = (widget.product['price'] as int).toDouble();
+    } else if (widget.product['price'] is double) {
+      price = widget.product['price'];
+    } else if (widget.product['price'] is String) {
+      price = double.tryParse(widget.product['price']) ?? 0.0;
+    }
+
+    // Formatea el precio
+    final formattedPrice = NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(price);
+
     return Scaffold(
       appBar: AppBar(
           title: Text(
@@ -53,7 +67,7 @@ class _DetailPageState extends State<DetailPage> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Precio: \$${widget.product['price']}',
+                  'Precio: $formattedPrice',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -184,3 +198,4 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 }
+
