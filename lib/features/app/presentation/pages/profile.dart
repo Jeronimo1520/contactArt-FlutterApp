@@ -8,6 +8,7 @@ import 'package:contact_art/features/user_auth/firebase_auth_implementation/fire
 import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:contact_art/features/app/presentation/pages/favorites.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -77,7 +78,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     IconButton(
                       icon: const Icon(Icons.favorite),
                       onPressed: () {
-                        // Acción al presionar el botón de favoritos
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FavoritesScreen(
+                              userId: _userId,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ],

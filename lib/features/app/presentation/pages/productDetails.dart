@@ -24,13 +24,22 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     super.initState();
     _favoritesController = FavoritesController(widget.userId);
+    _checkFavoriteStatus();
+  }
+
+  _checkFavoriteStatus() async {
+    bool favoriteStatus =
+        await _favoritesController!.isFavorite(widget.product.id);
+    setState(() {
+      isFavorite = favoriteStatus;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final cartController = Provider.of<CartController>(context, listen: false);
+    bool isLoading = false;
 
-    // Asegúrate de que el precio se maneja como un número
     double price = 0.0;
     if (widget.product['price'] is int) {
       price = (widget.product['price'] as int).toDouble();
@@ -41,7 +50,8 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     // Formatea el precio
-    final formattedPrice = NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(price);
+    final formattedPrice =
+        NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(price);
 
     return Scaffold(
       appBar: AppBar(
@@ -156,6 +166,9 @@ class _DetailPageState extends State<DetailPage> {
                     Flexible(
                       child: GestureDetector(
                         onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
                           if (isFavorite) {
                             await _favoritesController
                                 ?.removeFavorite(widget.product.id);
@@ -166,8 +179,11 @@ class _DetailPageState extends State<DetailPage> {
                                 ?.addFavorite(widget.product.id);
                             showToast(message: 'Producto agregado a favoritos');
                           }
+                          bool favoriteStatus = await _favoritesController!
+                              .isFavorite(widget.product.id);
                           setState(() {
-                            isFavorite = !isFavorite;
+                            isFavorite = favoriteStatus;
+                            isLoading = false;
                           });
                         },
                         child: Column(
@@ -198,4 +214,3 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 }
-
