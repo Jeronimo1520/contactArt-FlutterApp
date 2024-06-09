@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:contact_art/features/app/presentation/splash_screen/splashScreen.dart';
 import 'package:contact_art/features/app/presentation/pages/loginPage.dart';
 import 'package:provider/provider.dart';
-
 import 'features/app/presentation/pages/signUpPage.dart';
 
 void main() async {
