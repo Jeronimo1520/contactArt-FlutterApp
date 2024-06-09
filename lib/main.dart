@@ -3,7 +3,7 @@ import 'package:contact_art/controllers/cartController.dart';
 import 'package:contact_art/controllers/userProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
 import 'package:contact_art/features/app/presentation/pages/cartPage.dart';
-import 'package:contact_art/features/app/presentation/pages/chatList.dart' as ListChat;
+import 'package:contact_art/features/app/presentation/pages/chatList.dart';
 import 'package:contact_art/features/app/presentation/pages/chatPage.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/pages/edufinPage.dart';
@@ -37,7 +37,7 @@ void main() async {
                   create: (context) => EdufinProvider(),
                 ),
               ],
-              child:  const MainApp(),
+              child:  MainApp(),
             ),
           ));
 }
@@ -59,7 +59,7 @@ class MainApp extends StatelessWidget {
         '/products': (context) => MyProductsPage(),
         '/informacion': (context) => EdufinPage(),
         '/chat': (context) => ChatPage(receiverUserId: '',receiverUserName: '', currentUserId: ''),
-        // '/chatList': (context) => ListChat.ChatListPage(),
+        '/chatList': (context) => ChatListPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',

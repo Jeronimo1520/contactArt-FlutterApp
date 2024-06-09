@@ -14,79 +14,62 @@ class ChatListPage extends StatefulWidget {
 }
 
 class _ChatListPageState extends State<ChatListPage> {
-  User? _user;
-  String? _userId;
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
 
   @override
   Widget build(BuildContext context) {
+    //  final userProvider = context.watch<UserProvider>();
+     final _userId = "CrjD6iVL5WbIL6MDN9aWdj0cZu63";
     return Scaffold(
-      body: _buildUserList(),
+      body: _buildUserList(_userId),
     );
   }
 
-  Widget _buildUserList() {
+  Widget _buildUserList(String? _userId) {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Algo salió mal');
-          }
+      stream: FirebaseFirestore.instance
+          .collection('chats')
+          .where('id', isGreaterThanOrEqualTo: _userId)
+          .where('id', isLessThanOrEqualTo: '${_userId!}\uf8ff')
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
 
-          return ListView(
-              children: snapshot.data!.docs
-                  .map<Widget>((doc) => _buildUserListItem(doc))
-                  .toList());
-        });
+        return ListView(
+          children: snapshot.data!.docs.map<Widget>((doc) {
+            Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
+
+            // Check if the chat id contains the current user id
+            if (data['id'].contains(_userId)) {
+              return ListTile(
+                title: Text(data['receiverName']),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(
+                        receiverUserId: data['receiverId'],
+                        receiverUserName: data['receiverName'],
+                        currentUserId: _userId,
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Container(
+                child: const Text("No chats found"),
+              );
+            }
+          }).toList(),
+        );
+      },
+    );
   }
 
-  Widget _buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-
-    if (_user?.email != data['email']) {
-      return ListTile(
-        title: Text(data['userName']),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatPage(
-                receiverUserId: document.id,
-                receiverUserName: data['userName'],
-                currentUserId: _userId,
-              ),
-            ),
-          );
-        },
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  void _loadUserData() {
-    UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
-
-    User user = userProvider.user;
-    String userId = userProvider.userId;
-
-    _user = user;
-    _userId = userId;
-
-    print("user profile: ${_user.toString()}");
-    print("userId profile: $_userId");
-
-    setState(() {});
-  }
 }

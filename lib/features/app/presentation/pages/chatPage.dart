@@ -8,31 +8,32 @@ import 'package:flutter/material.dart';
 class ChatPage extends StatefulWidget {
   final String receiverUserName;
   final String receiverUserId;
-  final String? currentUserId;
+  final String currentUserId;
   const ChatPage(
       {Key? key, required this.receiverUserName, required this.receiverUserId, required this.currentUserId})
       : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() {
-    return _ChatPageState();
-  }
+   @override
+  _ChatPageState createState() => _ChatPageState(currentUserId);
 }
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   late ChatService _chatService;
+  final String currentUserId;
+
+  _ChatPageState(this.currentUserId);
 
   @override
   void initState() {
     super.initState();
-    _chatService = ChatService(context);
+    _chatService = ChatService(currentUserId);
   }
 
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
       await _chatService.sendMessage(
-          widget.receiverUserId, _messageController.text);
+          widget.receiverUserId, _messageController.text, widget.receiverUserName);
       _messageController.clear();
     }
   }

@@ -11,15 +11,12 @@ class ChatService extends ChangeNotifier {
   final Timestamp timestamp = Timestamp.now();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  ChatService(BuildContext context)
-      : currentUserId =
-            Provider.of<UserProvider>(context, listen: false).userId {
-    currentUserId = Provider.of<UserProvider>(context, listen: false).userId;
-    
-  }
-  Future<void> sendMessage(String receiverId, String message) async {
+  ChatService(String userId) : currentUserId = userId;
+  
+  Future<void> sendMessage(String receiverId, String message, String receiverName) async {
     Message newMessage = Message(
         senderId: currentUserId,
+        receiverName: receiverName,
         receiverId: receiverId,
         message: message,
         timestamp: timestamp);

@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 
 class DetailPage extends StatefulWidget {
   final DocumentSnapshot product;
-  final String? userId;
+  final String userId;
 
   DetailPage({required this.product, required this.userId});
   @override
