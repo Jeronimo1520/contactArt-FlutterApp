@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:contact_art/controllers/cartController.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'PaymentPage.dart'; 
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -137,7 +138,12 @@ class _CartPageState extends State<CartPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Implementar la funcionalidad de proceder a la compra
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentPage(total: total),
+                    ),
+                  );
                 },
                 child: const Text('Proceder a la compra'),
               ),
