@@ -114,24 +114,26 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddProductPage()),
-                    );
-                  },
-                  child: const Text('Añadir producto'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyProductsPage()),
-                    );
-                  },
-                  child: const Text('Mis productos'),
-                ),
+                if (_user != null && _user!.type != 'comprador') ...[
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddProductPage()),
+                      );
+                    },
+                    child: const Text('Añadir producto'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyProductsPage()),
+                      );
+                    },
+                    child: const Text('Mis productos'),
+                  ),
+                ],
                 ElevatedButton(
                     onPressed: () async {
                       try {
