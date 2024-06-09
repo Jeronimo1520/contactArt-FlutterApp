@@ -166,7 +166,10 @@ class _DetailPageState extends State<DetailPage> {
                           onPressed: () async {
                             bool result = await cartController.addToCart(
                                 "'${widget.product['name']}'",
-                                '${widget.product['price']}');
+                                '${widget.product['price']}',
+                                '${widget.product['img']}',
+                                1);
+
                             if (result) {
                               showToast(
                                   message: "Producto agregado al carrito");
