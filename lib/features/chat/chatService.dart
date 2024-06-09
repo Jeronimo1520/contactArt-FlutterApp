@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/userProvider.dart';
+import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class ChatService extends ChangeNotifier {
       : currentUserId =
             Provider.of<UserProvider>(context, listen: false).userId {
     currentUserId = Provider.of<UserProvider>(context, listen: false).userId;
+    
   }
   Future<void> sendMessage(String receiverId, String message) async {
     Message newMessage = Message(
@@ -33,8 +35,8 @@ class ChatService extends ChangeNotifier {
         .add(newMessage.toMap());
   }
 
-  Stream<QuerySnapshot> getMessages(String currentUserId, String receiverId) {
-    List<String> ids = [currentUserId, receiverId];
+  Stream<QuerySnapshot> getMessages(String? currentUserId, String receiverId) {
+    List<String?> ids = [currentUserId, receiverId];
     ids.sort();
     String chatId = ids.join('_');
 

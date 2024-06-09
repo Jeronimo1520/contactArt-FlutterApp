@@ -2,17 +2,15 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/features/chat/chatService.dart';
-import 'package:contact_art/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:contact_art/global/common/chatBubble.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../../../controllers/UserProvider.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverUserName;
   final String receiverUserId;
+  final String? currentUserId;
   const ChatPage(
-      {Key? key, required this.receiverUserName, required this.receiverUserId})
+      {Key? key, required this.receiverUserName, required this.receiverUserId, required this.currentUserId})
       : super(key: key);
 
   @override
@@ -23,7 +21,6 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
-
   late ChatService _chatService;
 
   @override
@@ -52,15 +49,17 @@ class _ChatPageState extends State<ChatPage> {
             child: _buildMessageList(),
           ),
           _buildMessageInput(),
+
+          const SizedBox(height: 25)
         ],
       ),
     );
   }
 
   Widget _buildMessageList() {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder(
       stream: _chatService.getMessages(
-          Provider.of<UserProvider>(context, listen: false).userId,
+          widget.currentUserId,
           widget.receiverUserId),
       builder: (context, snapshot) {
         if(snapshot.hasError) {
@@ -82,9 +81,8 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildMessageItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-    String? userId = Provider.of<UserProvider>(context, listen: false).userId;
 
-    var alignment = data['senderId'] == userId
+    var alignment = data['senderId'] == widget.currentUserId
         ? Alignment.centerRight
         : Alignment.centerLeft;
 
@@ -92,32 +90,36 @@ class _ChatPageState extends State<ChatPage> {
       alignment: alignment,
       child: Column(
         children: [
-          Text(data['senderName']),
-          Text(data['message']),
+          Text(data['senderId'] == widget.currentUserId ? 'Tú' : widget.receiverUserName),
+          const SizedBox(height: 5),
+          ChatBubble(message: data['message']),
         ],
       ),
     );
   }
 
   Widget _buildMessageInput() {
-    return Row(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _messageController,
-              decoration: const InputDecoration(
-                hintText: 'Escribe un mensaje...',
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _messageController,
+                decoration: const InputDecoration(
+                  hintText: 'Escribe un mensaje...',
+                ),
               ),
             ),
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.send, size: 400),
-          onPressed: sendMessage,
-        ),
-      ],
+          IconButton(
+            icon: const Icon(Icons.send, size: 25),
+            onPressed: sendMessage,
+          ),
+        ],
+      ),
     );
   }
 }

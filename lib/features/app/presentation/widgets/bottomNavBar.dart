@@ -8,7 +8,7 @@ class BottomNavBar extends StatelessWidget {
     '/perfil',
     '/informacion',
     '/home',
-    '/mensajes',
+    '/chatList',
     '/carrito',
   ];
 
