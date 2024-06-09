@@ -41,4 +41,14 @@ class FavoritesController {
       await doc.reference.update({'favorites': favorites, 'userId': userId});
     }
   }
+
+  Future<bool> isFavorite(String productId) async {
+    var doc = await _firestore.collection('favorites').doc(userId).get();
+    if (doc.exists) {
+      List<String> favorites = List<String>.from(doc.data()?['favorites']);
+      return favorites.contains(productId);
+    } else {
+      return false;
+    }
+  }
 }
