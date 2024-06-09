@@ -121,7 +121,6 @@ class FavoriteItem extends StatelessWidget {
                 size: 24,
               ),
               onPressed: () {
-                // Acción al presionar el botón de eliminar
               },
             ),
             Container(

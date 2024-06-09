@@ -43,8 +43,6 @@ class _ChatListPageState extends State<ChatListPage> {
         return ListView(
           children: snapshot.data!.docs.map<Widget>((doc) {
             Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
-
-            // Check if the chat id contains the current user id
             if (data['id'].contains(_userId)) {
               return ListTile(
                 title: Text(data['receiverName']),

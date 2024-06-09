@@ -68,8 +68,6 @@ class _HomePageState extends State<HomePage> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot product = snapshot.data!.docs[index];
-
-                  // Asegúrate de que el precio se maneja como un número
                   double price = 0.0;
                   if (product['price'] is int) {
                     price = product['price'].toDouble();
@@ -79,7 +77,6 @@ class _HomePageState extends State<HomePage> {
                     price = double.tryParse(product['price']) ?? 0.0;
                   }
 
-                  // Formatea el precio
                   final formattedPrice = NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(price);
 
                   return Dismissible(

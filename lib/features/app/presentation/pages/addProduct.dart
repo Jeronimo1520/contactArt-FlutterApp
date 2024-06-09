@@ -136,6 +136,7 @@ class _AddProductPageState extends State<AddProductPage> {
           content: Text('Producto publicado correctamente'),
         ),
       );
+      // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, '/home');
       return true;
     } else {

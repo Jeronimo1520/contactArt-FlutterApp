@@ -72,7 +72,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt),
                       onPressed: () {
-                        // Acción al presionar el botón de configuración
                       },
                     ),
                     IconButton(
@@ -140,7 +139,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         await _auth.signOut();
                         Navigator.pushNamed(context, '/login');
                       } catch (e) {
-                        // Muestra un mensaje de error si algo sale mal
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Error al cerrar sesión: $e'),
