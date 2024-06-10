@@ -99,16 +99,20 @@ class _CartPageState extends State<CartPage> {
                               const SizedBox(height: 4.0),
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.remove),
-                                    onPressed: () async {
-                                      if (item.quantity > 1) {
-                                        await cartController.updateQuantity(
-                                            snapshot.data!.docs[index].id,
-                                            item.quantity - 1);
-                                      }
-                                    },
-                                  ),
+                                  item.quantity > 1
+                                      ? IconButton(
+                                          icon: const Icon(Icons.remove),
+                                          onPressed: () async {
+                                            if (item.quantity > 1) {
+                                              await cartController.updateQuantity(snapshot.data!.docs[index].id,
+                                              item.quantity - 1);
+                                            }
+                                          },
+                                        )
+                                      : Container(
+                                          width: 48,
+                                          height: 48,
+                                        ),
                                   Text(item.quantity.toString()),
                                   IconButton(
                                     icon: const Icon(Icons.add),
