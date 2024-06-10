@@ -1,6 +1,7 @@
 import 'package:contact_art/controllers/FavoritesController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/global/common/toast.dart';
+import 'package:contact_art/models/Cart.dart';
 import 'package:contact_art/models/Favorites.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'cartPage.dart';
 import 'productDetails.dart';
-import 'package:contact_art/controllers/cartController.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,6 +37,7 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final ValueNotifier<int> _favoritesChangeNotifier = ValueNotifier(0);
+
   Future<List<FavoriteItem>> getFavoriteItems() async {
     final DocumentSnapshot favoritesSnapshot = await FirebaseFirestore.instance
         .collection('favorites')
@@ -120,7 +121,6 @@ class FavoriteItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _favoritesController = FavoritesController(userId);
-    final cartController = Provider.of<CartController>(context, listen: false);
     NumberFormat currencyFormat = NumberFormat.currency(
       locale: 'es_ES',
       symbol: '\$',
@@ -203,11 +203,7 @@ class FavoriteItem extends StatelessWidget {
               height: 30,
               child: ElevatedButton(
                 onPressed: () async {
-                  bool result = await cartController.addToCart(
-                      "'${product['name']}'",
-                      '${product['price']}',
-                      '${product['img']}',
-                      1);
+                  bool result = await addToCart(context);
 
                   if (result) {
                     showToast(message: "Producto agregado al carrito");
@@ -215,7 +211,7 @@ class FavoriteItem extends StatelessWidget {
                     showToast(
                         message: "Error al agregar el producto al carrito");
                   }
-                  _favoritesController.removeFavorite(product.id);
+                  await _favoritesController.removeFavorite(product.id);
 
                   Navigator.push(
                     context,
@@ -249,5 +245,18 @@ class FavoriteItem extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  Future<bool> addToCart(BuildContext context) async {
+    final cartController = Provider.of<CartController>(context, listen: false);
+    Cart cart = Cart(
+      name: product['name'],
+      price: product['price'],
+      img: product['img'],
+      quantity: 1,
+      userId: userId,
+    );
+    String result = await cartController.addToCart(cart);
+    return result.isNotEmpty;
   }
 }
