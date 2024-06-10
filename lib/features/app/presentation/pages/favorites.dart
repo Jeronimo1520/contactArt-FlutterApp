@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:contact_art/controllers/cartController.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'cartPage.dart';
 import 'productDetails.dart';
+import 'package:contact_art/controllers/cartController.dart';
 
 void main() {
   runApp(MyApp());
@@ -117,6 +120,7 @@ class FavoriteItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _favoritesController = FavoritesController(userId);
+    final cartController = Provider.of<CartController>(context, listen: false);
     NumberFormat currencyFormat = NumberFormat.currency(
       locale: 'es_ES',
       symbol: '\$',
@@ -140,7 +144,6 @@ class FavoriteItem extends StatelessWidget {
                 Icons.delete,
                 size: 24,
               ),
-              
               onPressed: () async {
                 showDialog(
                   context: context,
@@ -193,14 +196,34 @@ class FavoriteItem extends StatelessWidget {
                     );
                   },
                 );
-
               },
             ),
             Container(
               width: 114,
               height: 30,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  bool result = await cartController.addToCart(
+                      "'${product['name']}'",
+                      '${product['price']}',
+                      '${product['img']}',
+                      1);
+
+                  if (result) {
+                    showToast(message: "Producto agregado al carrito");
+                  } else {
+                    showToast(
+                        message: "Error al agregar el producto al carrito");
+                  }
+                  _favoritesController.removeFavorite(product.id);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CartPage(),
+                    ),
+                  );
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.purple),
                 ),
