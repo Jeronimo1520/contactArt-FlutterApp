@@ -4,6 +4,7 @@ import 'package:contact_art/controllers/cartController.dart';
 import 'package:contact_art/features/app/presentation/pages/chatPage.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:contact_art/models/User.dart';
+import 'package:contact_art/models/Cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,6 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = Provider.of<CartController>(context, listen: false);
     bool isLoading = false;
 
     double price = 0.0;
@@ -90,7 +90,7 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ),
             Spacer(),
-             Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Chatea con el vendedor'),
@@ -164,11 +164,7 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                           ),
                           onPressed: () async {
-                            bool result = await cartController.addToCart(
-                                "'${widget.product['name']}'",
-                                '${widget.product['price']}',
-                                '${widget.product['img']}',
-                                1);
+                            bool result = await addToCart();
 
                             if (result) {
                               showToast(
@@ -244,5 +240,18 @@ class _DetailPageState extends State<DetailPage> {
       ),
     );
   }
-}
 
+  Future<bool> addToCart() async {
+    String userId = widget.userId;
+    final cartController = Provider.of<CartController>(context, listen: false);
+    Cart cart = Cart(
+      name: widget.product['name'],
+      price: widget.product['price'],
+      img: widget.product['img'],
+      quantity: 1,
+      userId: userId,
+    );
+    String result = await cartController.addToCart(cart);
+    return result != "";
+  }
+}
