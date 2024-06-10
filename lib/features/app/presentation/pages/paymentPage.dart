@@ -16,6 +16,12 @@ class _PaymentPageState extends State<PaymentPage> {
   final TextEditingController _expiryDateController = TextEditingController();
   final TextEditingController _cvvController = TextEditingController();
 
+  bool _isCardInfoValid() {
+    return _cardNumberController.text.isNotEmpty &&
+        _expiryDateController.text.isNotEmpty &&
+        _cvvController.text.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     final NumberFormat currencyFormat = NumberFormat.currency(
@@ -46,6 +52,13 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     void _showOrderConfirmationDialog(BuildContext context) {
+      if (!_isCardInfoValid()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Por favor complete todos los campos de la tarjeta')),
+        );
+        return;
+      }
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
