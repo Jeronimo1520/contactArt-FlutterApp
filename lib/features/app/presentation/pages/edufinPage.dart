@@ -1,8 +1,8 @@
-
-
 import 'package:contact_art/controllers/EdufinProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/bottomNavBar.dart';
 
 class EdufinPage extends StatelessWidget {
   @override
@@ -37,6 +37,10 @@ class EdufinPage extends StatelessWidget {
             }).toList(),
           );
         },
+      ),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 1,
+        context: context,
       ),
     );
   }

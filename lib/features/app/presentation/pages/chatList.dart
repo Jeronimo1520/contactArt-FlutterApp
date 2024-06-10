@@ -6,6 +6,8 @@ import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/bottomNavBar.dart';
+
 class ChatListPage extends StatefulWidget {
   const ChatListPage({Key? key}) : super(key: key);
 
@@ -18,10 +20,14 @@ class _ChatListPageState extends State<ChatListPage> {
   @override
   Widget build(BuildContext context) {
     //  final userProvider = context.watch<UserProvider>();
-     final _userId = "CrjD6iVL5WbIL6MDN9aWdj0cZu63";
+     final _userId = "hYoliOg7vBnAkdcMcZvU";
     return Scaffold(
       body: _buildUserList(_userId),
-    );
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 3,
+        context: context,
+      ),
+    ); 
   }
 
   Widget _buildUserList(String? _userId) {
