@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/userProvider.dart';
-import 'package:contact_art/controllers/cartController.dart'; // Importar el controlador del carrito
+import 'package:contact_art/controllers/cartController.dart';
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'PaymentPage.dart';
+import 'package:contact_art/models/Cart.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -56,18 +57,18 @@ class _CartPageState extends State<CartPage> {
           }
 
           final items = snapshot.data!.docs.map((doc) {
-            return CartItem(
-              id: doc.id,
-              img: doc['img'],
+            return Cart(
               name: doc['name'],
-              price: double.tryParse(doc['price'].toString()) ?? 0.0,
+              price: doc['price'].toString(),
+              img: doc['img'],
               quantity: doc['quantity'],
+              userId: doc['userId'],
             );
           }).toList();
 
           final double total = items.fold(
             0.0,
-            (sum, item) => sum + (item.quantity * item.price),
+            (sum, item) => sum + (item.quantity * double.parse(item.price)),
           );
 
           return Padding(
@@ -93,29 +94,28 @@ class _CartPageState extends State<CartPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(currencyFormat.format(item.price)),
+                              Text(currencyFormat
+                                  .format(double.parse(item.price))),
                               const SizedBox(height: 4.0),
                               Row(
                                 children: [
-                                  item.quantity > 1
-                                      ? IconButton(
-                                          icon: const Icon(Icons.remove),
-                                          onPressed: () async {
-                                            if (item.quantity > 1) {
-                                              await cartController.updateQuantity(item.id, item.quantity - 1);
-                                            }
-                                          },
-                                        )
-                                      : Container(
-                                          width: 48, // Ancho de un IconButton
-                                          height: 48, // Altura de un IconButton
-                                        ),
+                                  IconButton(
+                                    icon: const Icon(Icons.remove),
+                                    onPressed: () async {
+                                      if (item.quantity > 1) {
+                                        await cartController.updateQuantity(
+                                            snapshot.data!.docs[index].id,
+                                            item.quantity - 1);
+                                      }
+                                    },
+                                  ),
                                   Text(item.quantity.toString()),
                                   IconButton(
                                     icon: const Icon(Icons.add),
                                     onPressed: () async {
                                       await cartController.updateQuantity(
-                                          item.id, item.quantity + 1);
+                                          snapshot.data!.docs[index].id,
+                                          item.quantity + 1);
                                     },
                                   ),
                                 ],
@@ -144,8 +144,8 @@ class _CartPageState extends State<CartPage> {
                                             style:
                                                 TextStyle(color: Colors.red)),
                                         onPressed: () async {
-                                          await cartController
-                                              .deleteItem(item.id);
+                                          await cartController.deleteItem(
+                                              snapshot.data!.docs[index].id);
                                           Navigator.of(context).pop();
                                           showToast(
                                               message:
@@ -210,20 +210,4 @@ class _CartPageState extends State<CartPage> {
     String userId = userProvider.userId;
     return userId;
   }
-}
-
-class CartItem {
-  final String id; // Añadir el id del documento
-  final String img;
-  final String name;
-  final double price;
-  int quantity;
-
-  CartItem({
-    required this.id, // Añadir el id del documento
-    required this.img,
-    required this.name,
-    required this.price,
-    required this.quantity,
-  });
 }
