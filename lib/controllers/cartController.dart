@@ -36,12 +36,25 @@ class CartController extends ChangeNotifier {
   }
 
   Stream<QuerySnapshot> getCartStream() {
-    return FirebaseFirestore.instance.collection(collection).snapshots();
+    return db.collection(collection).snapshots();
   }
 
-  Future<bool> deleteTask(int index) {
-    cartItems.removeAt(index);
-    notifyListeners();
-    return Future.value(true);
+  Future<void> updateQuantity(String cartId, int quantity) async {
+    try {
+      await db
+          .collection(collection)
+          .doc(cartId)
+          .update({'quantity': quantity});
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deleteItem(String cartId) async {
+    try {
+      await db.collection(collection).doc(cartId).delete();
+    } catch (e) {
+      print(e);
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/userProvider.dart';
+import 'package:contact_art/controllers/cartController.dart'; // Importar el controlador del carrito
 import 'package:contact_art/features/app/presentation/widgets/bottomNavBar.dart';
 import 'package:contact_art/global/common/toast.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +17,12 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   late Stream<QuerySnapshot> cartStream;
+  late CartController cartController;
 
   @override
   void initState() {
     super.initState();
+    cartController = CartController();
     cartStream = FirebaseFirestore.instance
         .collection('cart')
         .where('userId', isEqualTo: getUser())
@@ -54,6 +57,7 @@ class _CartPageState extends State<CartPage> {
 
           final items = snapshot.data!.docs.map((doc) {
             return CartItem(
+              id: doc.id,
               img: doc['img'],
               name: doc['name'],
               price: double.tryParse(doc['price'].toString()) ?? 0.0,
@@ -96,25 +100,22 @@ class _CartPageState extends State<CartPage> {
                                   item.quantity > 1
                                       ? IconButton(
                                           icon: const Icon(Icons.remove),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (item.quantity > 1) {
-                                                item.quantity--;
-                                              }
-                                            });
+                                          onPressed: () async {
+                                            if (item.quantity > 1) {
+                                              await cartController.updateQuantity(item.id, item.quantity - 1);
+                                            }
                                           },
                                         )
-                                      : const SizedBox(
-                                          width: 48,
-                                          height: 48,
+                                      : Container(
+                                          width: 48, // Ancho de un IconButton
+                                          height: 48, // Altura de un IconButton
                                         ),
                                   Text(item.quantity.toString()),
                                   IconButton(
                                     icon: const Icon(Icons.add),
-                                    onPressed: () {
-                                      setState(() {
-                                        item.quantity++;
-                                      });
+                                    onPressed: () async {
+                                      await cartController.updateQuantity(
+                                          item.id, item.quantity + 1);
                                     },
                                   ),
                                 ],
@@ -140,15 +141,15 @@ class _CartPageState extends State<CartPage> {
                                       ),
                                       TextButton(
                                         child: const Text('Eliminar',
-                                            style: TextStyle(color: Colors.red)),
-                                        onPressed: () {
-                                          setState(() {
-                                            items.removeAt(index);
-                                          });
+                                            style:
+                                                TextStyle(color: Colors.red)),
+                                        onPressed: () async {
+                                          await cartController
+                                              .deleteItem(item.id);
+                                          Navigator.of(context).pop();
                                           showToast(
                                               message:
                                                   "Producto eliminado del carrito");
-                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ],
@@ -168,7 +169,8 @@ class _CartPageState extends State<CartPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Total:', style: Theme.of(context).textTheme.titleLarge),
+                      Text('Total:',
+                          style: Theme.of(context).textTheme.titleLarge),
                       Text(currencyFormat.format(total),
                           style: Theme.of(context).textTheme.titleLarge),
                     ],
@@ -211,12 +213,14 @@ class _CartPageState extends State<CartPage> {
 }
 
 class CartItem {
+  final String id; // Añadir el id del documento
   final String img;
   final String name;
   final double price;
   int quantity;
 
   CartItem({
+    required this.id, // Añadir el id del documento
     required this.img,
     required this.name,
     required this.price,
