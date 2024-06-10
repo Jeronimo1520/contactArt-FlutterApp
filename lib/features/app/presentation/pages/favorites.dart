@@ -1,5 +1,7 @@
 import 'package:contact_art/controllers/FavoritesController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:contact_art/global/common/toast.dart';
+import 'package:contact_art/models/Favorites.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:contact_art/controllers/cartController.dart';
@@ -21,15 +23,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class FavoritesScreen extends StatelessWidget {
+class FavoritesScreen extends StatefulWidget {
   final String? userId;
 
   FavoritesScreen({required this.userId});
 
+  @override
+  _FavoritesScreenState createState() => _FavoritesScreenState();
+}
+
+class _FavoritesScreenState extends State<FavoritesScreen> {
+  final ValueNotifier<int> _favoritesChangeNotifier = ValueNotifier(0);
   Future<List<FavoriteItem>> getFavoriteItems() async {
     final DocumentSnapshot favoritesSnapshot = await FirebaseFirestore.instance
         .collection('favorites')
-        .doc(userId)
+        .doc(widget.userId)
         .get();
 
     List<String> favoriteIds =
@@ -46,7 +54,9 @@ class FavoritesScreen extends StatelessWidget {
             title: productSnapshot['name'],
             price: int.parse((productSnapshot['price'])),
             itemId: id,
-            userId: userId!,
+            userId: widget.userId!,
+            product: productSnapshot,
+            favoritesChangeNotifier: _favoritesChangeNotifier,
           ),
         );
       }
@@ -57,27 +67,30 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Mis favoritos'),
-      ),
-      body: FutureBuilder<List<FavoriteItem>>(
-        future: getFavoriteItems(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+    return ValueListenableBuilder(
+        valueListenable: _favoritesChangeNotifier,
+        builder: (context, value, child) {
+          return Scaffold(
+              appBar: AppBar(
+                title: Text('Mis favoritos'),
+              ),
+              body: FutureBuilder<List<FavoriteItem>>(
+                future: getFavoriteItems(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
 
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
 
-          return ListView(
-            children: snapshot.data!,
-          );
-        },
-      ),
-    );
+                  return ListView(
+                    children: snapshot.data!,
+                  );
+                },
+              ));
+        });
   }
 }
 
@@ -87,6 +100,9 @@ class FavoriteItem extends StatelessWidget {
   final String title;
   final int price;
   final String itemId;
+  final DocumentSnapshot product;
+  late FavoritesController _favoritesController;
+  final ValueNotifier<int> favoritesChangeNotifier;
 
   FavoriteItem({
     required this.imageUrl,
@@ -94,15 +110,19 @@ class FavoriteItem extends StatelessWidget {
     required this.price,
     required this.itemId,
     required this.userId,
+    required this.product,
+    required this.favoritesChangeNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
+    _favoritesController = FavoritesController(userId);
     NumberFormat currencyFormat = NumberFormat.currency(
       locale: 'es_ES',
       symbol: '\$',
       customPattern: '\u00A4#,##0.00',
     );
+
     return Card(
       child: ListTile(
         leading: Container(
@@ -120,8 +140,58 @@ class FavoriteItem extends StatelessWidget {
                 Icons.delete,
                 size: 24,
               ),
-              onPressed: () {
-                // Acción al presionar el botón de eliminar
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Eliminar producto'),
+                      content: const Text(
+                          '¿Estás seguro de que deseas eliminar este producto de tu lista de favoritos?'),
+                      actions: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  child: const Text(
+                                    'Cancelar',
+                                    style: TextStyle(color: Colors.purple),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.purple,
+                                      ),
+                                      child: const Text('Eliminar',
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      onPressed: () async {
+                                        await _favoritesController
+                                            .removeFavorite(product.id);
+                                        showToast(
+                                            message:
+                                                'Producto eliminado de favoritos');
+                                        Navigator.of(context).pop();
+                                        favoritesChangeNotifier.value++;
+                                      })),
+                            ),
+                          ],
+                        )
+                      ],
+                    );
+                  },
+                );
               },
             ),
             Container(
