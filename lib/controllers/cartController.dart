@@ -4,10 +4,9 @@ import 'package:flutter/cupertino.dart';
 class CartController extends ChangeNotifier {
   List<Cart> cartItems = [];
 
-  Future<bool> addToCart(String name, String price) {
-    cartItems.add(Cart(name, price));
+  Future<bool> addToCart(String name, String price, String img, int quantity) {
+    cartItems.add(Cart(name, price, img, quantity));
     notifyListeners();
-    print(cartItems);
     return Future.value(true);
   }
 

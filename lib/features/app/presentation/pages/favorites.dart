@@ -140,6 +140,7 @@ class FavoriteItem extends StatelessWidget {
                 Icons.delete,
                 size: 24,
               ),
+              
               onPressed: () async {
                 showDialog(
                   context: context,
@@ -192,6 +193,7 @@ class FavoriteItem extends StatelessWidget {
                     );
                   },
                 );
+
               },
             ),
             Container(

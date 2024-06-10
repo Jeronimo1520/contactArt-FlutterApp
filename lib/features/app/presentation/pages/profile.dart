@@ -74,7 +74,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt),
                       onPressed: () {
-                        // Acción al presionar el botón de configuración
                       },
                     ),
                     IconButton(
@@ -117,31 +116,32 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddProductPage()),
-                    );
-                  },
-                  child: const Text('Añadir producto'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyProductsPage()),
-                    );
-                  },
-                  child: const Text('Mis productos'),
-                ),
+                if (_user != null && _user!.type != 'comprador') ...[
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddProductPage()),
+                      );
+                    },
+                    child: const Text('Añadir producto'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyProductsPage()),
+                      );
+                    },
+                    child: const Text('Mis productos'),
+                  ),
+                ],
                 ElevatedButton(
                     onPressed: () async {
                       try {
                         await _auth.signOut();
                         Navigator.pushNamed(context, '/login');
                       } catch (e) {
-                        // Muestra un mensaje de error si algo sale mal
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Error al cerrar sesión: $e'),

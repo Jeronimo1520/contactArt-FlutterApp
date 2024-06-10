@@ -3,11 +3,14 @@ import 'package:contact_art/controllers/cartController.dart';
 import 'package:contact_art/controllers/userProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
 import 'package:contact_art/features/app/presentation/pages/cartPage.dart';
+import 'package:contact_art/features/app/presentation/pages/chatList.dart';
+import 'package:contact_art/features/app/presentation/pages/chatPage.dart';
 import 'package:contact_art/features/app/presentation/pages/editProfile.dart';
 import 'package:contact_art/features/app/presentation/pages/edufinPage.dart';
 import 'package:contact_art/features/app/presentation/pages/homePage.dart';
 import 'package:contact_art/features/app/presentation/pages/myProducts.dart';
 import 'package:contact_art/features/app/presentation/pages/profile.dart';
+import 'package:contact_art/features/chat/chatService.dart';
 import 'package:contact_art/firebase_options.dart';
 import 'package:contact_art/models/Cart.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,7 +36,7 @@ void main() async {
                   create: (context) => EdufinProvider(),
                 ),
               ],
-              child: const MainApp(),
+              child:  MainApp(),
             ),
           ));
 }
@@ -54,6 +57,8 @@ class MainApp extends StatelessWidget {
         '/carrito': (context) => CartPage(),
         '/products': (context) => MyProductsPage(),
         '/informacion': (context) => EdufinPage(),
+        '/chat': (context) => ChatPage(receiverUserId: '',receiverUserName: '', currentUserId: ''),
+        '/chatList': (context) => ChatListPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'ContactArt',

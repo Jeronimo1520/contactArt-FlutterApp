@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:contact_art/controllers/UserController.dart';
 import 'package:contact_art/controllers/cartController.dart';
+import 'package:contact_art/features/app/presentation/pages/chatPage.dart';
 import 'package:contact_art/global/common/toast.dart';
+import 'package:contact_art/models/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +12,7 @@ import 'package:intl/intl.dart';
 
 class DetailPage extends StatefulWidget {
   final DocumentSnapshot product;
-  final String? userId;
+  final String userId;
 
   DetailPage({required this.product, required this.userId});
   @override
@@ -19,6 +22,7 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   FavoritesController? _favoritesController;
   bool isFavorite = false;
+  UserController _userController = UserController();
 
   @override
   void initState() {
@@ -86,6 +90,30 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ),
             Spacer(),
+             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Chatea con el vendedor'),
+                IconButton(
+                    icon: const Icon(Icons.chat),
+                    onPressed: () async {
+                      String receiverUserId = widget.product['userId'];
+                      User receiverUser =
+                          await _userController.getUser(receiverUserId);
+                      String receiverUserName = receiverUser.userName;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            receiverUserId: receiverUserId,
+                            receiverUserName: receiverUserName,
+                            currentUserId: widget.userId,
+                          ),
+                        ),
+                      );
+                    })
+              ],
+            ),
             Padding(
               padding: EdgeInsets.only(bottom: 3),
               child: Container(
@@ -138,7 +166,10 @@ class _DetailPageState extends State<DetailPage> {
                           onPressed: () async {
                             bool result = await cartController.addToCart(
                                 "'${widget.product['name']}'",
-                                '${widget.product['price']}');
+                                '${widget.product['price']}',
+                                '${widget.product['img']}',
+                                1);
+
                             if (result) {
                               showToast(
                                   message: "Producto agregado al carrito");
