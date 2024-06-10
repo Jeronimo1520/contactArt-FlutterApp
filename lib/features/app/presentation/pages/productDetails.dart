@@ -255,3 +255,4 @@ class _DetailPageState extends State<DetailPage> {
     return result != "";
   }
 }
+

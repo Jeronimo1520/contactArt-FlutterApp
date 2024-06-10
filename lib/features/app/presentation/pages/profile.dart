@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/userController.dart';
 import 'package:contact_art/controllers/userProvider.dart';
 import 'package:contact_art/features/app/presentation/pages/addProduct.dart';
@@ -20,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   UserController userController = UserController();
   String? _userId;
   FireBaseAuthService _auth = FireBaseAuthService();
+  late final DocumentSnapshot product;
 
   @override
   void initState() {
@@ -82,6 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           MaterialPageRoute(
                             builder: (context) => FavoritesScreen(
                               userId: _userId,
+
                             ),
                           ),
                         );
