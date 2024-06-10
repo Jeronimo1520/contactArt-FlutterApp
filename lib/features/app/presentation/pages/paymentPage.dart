@@ -30,7 +30,7 @@ class _PaymentPageState extends State<PaymentPage> {
       customPattern: '\u00A4#,##0.00',
     );
 
-    void _showSuccessDialog(BuildContext context) {
+    void showSuccessDialog(BuildContext context) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -41,8 +41,8 @@ class _PaymentPageState extends State<PaymentPage> {
               TextButton(
                 child: const Text('OK'),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Cierra el diálogo
-                  Navigator.of(context).pop(); // Vuelve a la página anterior (CartPage)
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); 
                 },
               ),
             ],
@@ -51,10 +51,10 @@ class _PaymentPageState extends State<PaymentPage> {
       );
     }
 
-    void _showOrderConfirmationDialog(BuildContext context) {
+    void showOrderConfirmationDialog(BuildContext context) {
       if (!_isCardInfoValid()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Por favor complete todos los campos de la tarjeta')),
+          const SnackBar(content: Text('Por favor complete todos los campos de la tarjeta')),
         );
         return;
       }
@@ -69,14 +69,14 @@ class _PaymentPageState extends State<PaymentPage> {
               TextButton(
                 child: const Text('Cancelar'),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Cierra el diálogo
+                  Navigator.of(context).pop(); 
                 },
               ),
               TextButton(
                 child: const Text('Confirmar', style: TextStyle(color: Colors.green)),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Cierra el diálogo de confirmación
-                  _showSuccessDialog(context); // Muestra el diálogo de éxito
+                  Navigator.of(context).pop(); 
+                  showSuccessDialog(context);
                 },
               ),
             ],
@@ -85,7 +85,7 @@ class _PaymentPageState extends State<PaymentPage> {
       );
     }
 
-    void _showCancelConfirmationDialog(BuildContext context) {
+    void showCancelConfirmationDialog(BuildContext context) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -96,14 +96,14 @@ class _PaymentPageState extends State<PaymentPage> {
               TextButton(
                 child: const Text('No'),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Cierra el diálogo
+                  Navigator.of(context).pop(); 
                 },
               ),
               TextButton(
                 child: const Text('Sí', style: TextStyle(color: Colors.red)),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Cierra el diálogo
-                  Navigator.of(context).pop(); // Vuelve a la página anterior (CartPage)
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); 
                 },
               ),
             ],
@@ -125,12 +125,12 @@ class _PaymentPageState extends State<PaymentPage> {
               children: [
                 Text(
                   'Total a pagar:',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   currencyFormat.format(widget.total),
-                  style: Theme.of(context).textTheme.headline4?.copyWith(color: Colors.green),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.green),
                 ),
                 const SizedBox(height: 32),
                 Column(
@@ -194,27 +194,27 @@ class _PaymentPageState extends State<PaymentPage> {
                   onPressed: _selectedPaymentMethod == null
                       ? null
                       : () {
-                          _showOrderConfirmationDialog(context);
+                          showOrderConfirmationDialog(context);
                         },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green, // Cambia el color del botón a verde
+                    backgroundColor: Colors.green,
                   ),
                   child: const Text(
                     'Realizar pedido',
-                    style: TextStyle(color: Colors.white), // Cambia el color del texto a blanco
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    _showCancelConfirmationDialog(context);
+                    showCancelConfirmationDialog(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.red, // Cambia el color del botón a rojo
+                    backgroundColor: Colors.red, 
                   ),
                   child: const Text(
                     'No realizar pedido',
-                    style: TextStyle(color: Colors.white), // Cambia el color del texto a blanco
+                    style: TextStyle(color: Colors.white), 
                   ),
                 ),
               ],

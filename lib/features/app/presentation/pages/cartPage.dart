@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:contact_art/controllers/cartController.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'PaymentPage.dart'; 
+import 'PaymentPage.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CartPageState createState() => _CartPageState();
 }
 
@@ -25,7 +26,10 @@ class _CartPageState extends State<CartPage> {
       customPattern: '\u00A4#,##0.00',
     );
 
-    double total = items.fold(0.0, (sum, item) => sum + (item.quantity * double.tryParse(item.price.toString())!));
+    double total = items.fold(
+        0.0,
+        (sum, item) =>
+            sum + (item.quantity * double.tryParse(item.price.toString())!));
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +45,8 @@ class _CartPageState extends State<CartPage> {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   final item = items[index];
-                  final double price = double.tryParse(item.price.toString()) ?? 0.0;
+                  final double price =
+                      double.tryParse(item.price.toString()) ?? 0.0;
                   final String itemName = item.name.replaceAll("'", "");
 
                   return Card(
@@ -61,18 +66,23 @@ class _CartPageState extends State<CartPage> {
                           const SizedBox(height: 4.0),
                           Row(
                             children: [
-                              IconButton(
-                                icon: const Icon(Icons.remove),
-                                onPressed: () {
-                                  setState(() {
-                                    if (item.quantity > 1) {
-                                      item.quantity--;
-                                    } else {
-                                      items.removeAt(index);
-                                    }
-                                  });
-                                },
-                              ),
+                              item.quantity > 1
+                                  ? IconButton(
+                                      icon: const Icon(Icons.remove),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (item.quantity > 1) {
+                                            item.quantity--;
+                                          } else {
+                                            items.removeAt(index);
+                                          }
+                                        });
+                                      },
+                                    )
+                                  : const SizedBox(
+                                      width: 48,
+                                      height: 48,
+                                    ),
                               Text(item.quantity.toString()),
                               IconButton(
                                 icon: const Icon(Icons.add),
@@ -94,7 +104,8 @@ class _CartPageState extends State<CartPage> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: const Text('Eliminar producto'),
-                                content: const Text('¿Estás seguro de que deseas eliminar este producto del carrito?'),
+                                content: const Text(
+                                    '¿Estás seguro de que deseas eliminar este producto del carrito?'),
                                 actions: <Widget>[
                                   TextButton(
                                     child: const Text('Cancelar'),
@@ -103,12 +114,15 @@ class _CartPageState extends State<CartPage> {
                                     },
                                   ),
                                   TextButton(
-                                    child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+                                    child: const Text('Eliminar',
+                                        style: TextStyle(color: Colors.red)),
                                     onPressed: () {
                                       setState(() {
                                         items.removeAt(index);
                                       });
-                                      showToast(message: "Producto eliminado del carrito");
+                                      showToast(
+                                          message:
+                                              "Producto eliminado del carrito");
                                       Navigator.of(context).pop();
                                     },
                                   ),
@@ -129,22 +143,25 @@ class _CartPageState extends State<CartPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total:', style: Theme.of(context).textTheme.headline6),
-                  Text(currencyFormat.format(total), style: Theme.of(context).textTheme.headline6),
+                  Text('Total:', style: Theme.of(context).textTheme.titleLarge),
+                  Text(currencyFormat.format(total),
+                      style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
             ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PaymentPage(total: total),
-                    ),
-                  );
-                },
+                onPressed: items.isNotEmpty
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentPage(total: total),
+                          ),
+                        );
+                      }
+                    : null,
                 child: const Text('Proceder a la compra'),
               ),
             ),
