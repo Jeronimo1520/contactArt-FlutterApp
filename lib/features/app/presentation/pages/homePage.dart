@@ -18,6 +18,9 @@ class _HomePageState extends State<HomePage> {
   final ProductController productController = ProductController();
   late String _searchTerm = '';
   late String userId;
+  List<DocumentSnapshot> products = [];
+  bool isLoading = false;
+  bool hasMore = true;
 
   @override
   void initState() {
@@ -25,6 +28,34 @@ class _HomePageState extends State<HomePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       userId = user.uid;
+    }
+    _getMoreData();
+  }
+
+  _getMoreData() async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+
+      QuerySnapshot querySnapshot;
+      if (products.isEmpty) {
+        querySnapshot = await productController.getProductsStream().first;
+      } else {
+        querySnapshot = await productController
+            .getProductsStream(startAfter: products.last)
+            .first;
+      }
+
+      if (querySnapshot.docs.isEmpty) {
+        hasMore = false;
+      } else {
+        products.addAll(querySnapshot.docs);
+      }
+
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -56,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
 
           return Center(
@@ -65,127 +96,148 @@ class _HomePageState extends State<HomePage> {
               height: 540,
               child: PageView.builder(
                 controller: _controller,
-                itemCount: snapshot.data!.docs.length,
+                itemCount: products.length + (hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
-                  DocumentSnapshot product = snapshot.data!.docs[index];
-                  double price = 0.0;
-                  if (product['price'] is int) {
-                    price = product['price'].toDouble();
-                  } else if (product['price'] is double) {
-                    price = product['price'];
-                  } else if (product['price'] is String) {
-                    price = double.tryParse(product['price']) ?? 0.0;
-                  }
+                  if (index == products.length) {
+                    return SizedBox.shrink();
+                  } else if (index < products.length) {
+                    DocumentSnapshot product = snapshot.data!.docs[index];
+                    double price = 0.0;
+                    if (product['price'] is int) {
+                      price = product['price'].toDouble();
+                    } else if (product['price'] is double) {
+                      price = product['price'];
+                    } else if (product['price'] is String) {
+                      price = double.tryParse(product['price']) ?? 0.0;
+                    }
 
-                  final formattedPrice = NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(price);
+                    final formattedPrice =
+                        NumberFormat.currency(locale: 'es_MX', symbol: '\$')
+                            .format(price);
 
-                  return Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.horizontal,
-                    confirmDismiss: (direction) async {
-                      if (direction == DismissDirection.startToEnd) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailPage(
-                              product: product,
-                              userId: widget.userId!,
+                    return Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.horizontal,
+                      confirmDismiss: (direction) async {
+                        if (direction == DismissDirection.startToEnd) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailPage(
+                                product: product,
+                                userId: widget.userId!,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        _controller.nextPage(
-                          duration: Duration(milliseconds: 1),
-                          curve: Curves.easeIn,
-                        );
-                      }
-                      return false;
-                    },
-                    child: Container(
-                      height: 320,
-                      width: 300,
-                      child: Card(
-                        elevation: 5,
-                        borderOnForeground: true,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  height: 300,
-                                  width: 380,
-                                  child: Image.network(
-                                    product['img'],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                product['name'],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25,
-                                ),
-                              ),
-                              Text(
-                                formattedPrice,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              ButtonBar(
-                                alignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    height: 80,
-                                    width: 80,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                          backgroundColor: Colors.red.shade700,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(40),
-                                          )),
-                                      child: Icon(Icons.arrow_back, color: Colors.white),
-                                      onPressed: () {
-                                        _controller.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.easeIn,
-                                        );
-                                      },
+                          );
+                        } else {
+                          _controller.nextPage(
+                            duration: Duration(milliseconds: 1),
+                            curve: Curves.easeIn,
+                          );
+                        }
+                        return false;
+                      },
+                      child: Container(
+                        height: 320,
+                        width: 300,
+                        child: Card(
+                          elevation: 5,
+                          borderOnForeground: true,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Container(
+                                    height: 300,
+                                    width: 380,
+                                    child: Image.network(
+                                      product['img'],
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  SizedBox(width: 100),
-                                  Container(
-                                    height: 80,
-                                    width: 80,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                          backgroundColor: Colors.green.shade700,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(40),
-                                          )),
-                                      child: Icon(Icons.remove_red_eye, color: Colors.white),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => DetailPage(
-                                                product: product, userId: userId),
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                ),
+                                Text(
+                                  product['name'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Text(
+                                  formattedPrice,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                ButtonBar(
+                                  alignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      height: 80,
+                                      width: 80,
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                Colors.red.shade700,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                            )),
+                                        child: Icon(Icons.arrow_back,
+                                            color: Colors.white),
+                                        onPressed: () {
+                                          _controller.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.easeIn,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: 100),
+                                    Container(
+                                      height: 80,
+                                      width: 80,
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                Colors.green.shade700,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                            )),
+                                        child: Icon(Icons.remove_red_eye,
+                                            color: Colors.white),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => DetailPage(
+                                                  product: product,
+                                                  userId: userId),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+                onPageChanged: (int index) {
+                  if (!isLoading && index == products.length - 1 && hasMore) {
+                    _getMoreData();
+                  }
                 },
               ),
             ),
@@ -199,7 +251,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-
-

@@ -3,6 +3,8 @@ import 'package:contact_art/models/Product.dart';
 
 class ProductController {
   FirebaseFirestore db = FirebaseFirestore.instance;
+  final CollectionReference _productCollection =
+      FirebaseFirestore.instance.collection('products');
 
   final String collection = "products";
 
@@ -33,8 +35,15 @@ class ProductController {
     }
   }
 
-  Stream<QuerySnapshot> getProductsStream() {
-    return FirebaseFirestore.instance.collection(collection).snapshots();
+  Stream<QuerySnapshot> getProductsStream({DocumentSnapshot? startAfter}) {
+    Query query = FirebaseFirestore.instance
+        .collection(collection)
+        .orderBy('name')
+        .limit(10);
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+    return query.snapshots();
   }
 
   Stream<QuerySnapshot> searchProductsStream(String searchTerm) {

@@ -10,6 +10,7 @@ import 'package:contact_art/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:contact_art/features/app/presentation/pages/favorites.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -72,9 +73,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     ),
                     IconButton(
-                      icon: const Icon(Icons.camera_alt),
-                      onPressed: () {
-                      },
+                      icon: const Icon(FontAwesomeIcons.instagram),
+                      onPressed: () {},
                     ),
                     IconButton(
                       icon: const Icon(Icons.favorite),
@@ -84,7 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           MaterialPageRoute(
                             builder: (context) => FavoritesScreen(
                               userId: _userId,
-
                             ),
                           ),
                         );
@@ -121,7 +120,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AddProductPage()),
+                        MaterialPageRoute(
+                            builder: (context) => AddProductPage()),
                       );
                     },
                     child: const Text('Añadir producto'),
@@ -130,7 +130,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyProductsPage()),
+                        MaterialPageRoute(
+                            builder: (context) => MyProductsPage()),
                       );
                     },
                     child: const Text('Mis productos'),
