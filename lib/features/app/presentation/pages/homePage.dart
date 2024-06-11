@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contact_art/controllers/ProductController.dart';
 import 'package:contact_art/features/app/presentation/widgets/BottomNavBar.dart';
+import 'package:contact_art/models/Product.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'productDetails.dart';
@@ -61,6 +62,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser.toString();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -125,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(
                               builder: (context) => DetailPage(
                                 product: product,
-                                userId: widget.userId!,
+                                userId: userId,
                               ),
                             ),
                           );

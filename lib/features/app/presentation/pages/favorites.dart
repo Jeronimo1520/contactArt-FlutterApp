@@ -12,10 +12,6 @@ import 'package:provider/provider.dart';
 import 'cartPage.dart';
 import 'productDetails.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -246,7 +242,7 @@ class FavoriteItem extends StatelessWidget {
       ),
     );
   }
-  
+
   Future<bool> addToCart(BuildContext context) async {
     final cartController = Provider.of<CartController>(context, listen: false);
     Cart cart = Cart(
