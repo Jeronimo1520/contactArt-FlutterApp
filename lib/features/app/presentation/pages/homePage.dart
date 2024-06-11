@@ -62,8 +62,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final userId = FirebaseAuth.instance.currentUser.toString();
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
