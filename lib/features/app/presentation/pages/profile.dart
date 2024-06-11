@@ -98,42 +98,59 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 30),
                 if (_user != null && _user!.type != 'comprador') ...[
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddProductPage()),
-                      );
-                    },
-                    child: const Text('Añadir producto'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyProductsPage()),
-                      );
-                    },
-                    child: const Text('Mis productos'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddProductPage()),
+                              );
+                            },
+                          ),
+                          Text('Añadir producto'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.remove_red_eye),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyProductsPage()),
+                              );
+                            },
+                          ),
+                          Text('Mis productos'),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
+                SizedBox(height: 60),
                 ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        await _auth.signOut();
-                        Navigator.pushNamed(context, '/login');
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Error al cerrar sesión: $e'),
-                          ),
-                        );
-                        print(e.toString());
-                      }
-                    },
-                    child: const Text('Cerrar sesión')),
+                  onPressed: () async {
+                    try {
+                      await _auth.signOut();
+                      Navigator.pushNamed(context, '/login');
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error al cerrar sesión: $e'),
+                        ),
+                      );
+                      print(e.toString());
+                    }
+                  },
+                  child: const Text('Cerrar sesión'),
+                ),
               ],
             );
           },
