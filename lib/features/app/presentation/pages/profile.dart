@@ -96,25 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   '${_user != null ? _user!.description : 'Cargando...'}',
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.grey,
-                      child: const Icon(Icons.add),
-                    ),
-                    Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.grey,
-                      child: const Icon(Icons.add),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 30),
                 if (_user != null && _user!.type != 'comprador') ...[
                   ElevatedButton(
                     onPressed: () {
